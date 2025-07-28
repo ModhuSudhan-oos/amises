@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Detailed information about a specific SaaS tool.">
-    <meta name="keywords" content="SaaS tool, software details, features, reviews">
-    <title>Tool Details - SaaS Tools Directory</title>
+    <meta name="description" content="Discover detailed information about [Tool Name] - a leading SaaS tool for [Category]. Features, pricing, pros, cons, and more.">
+    <meta name="keywords" content="[Tool Name], SaaS tool, [Category], software, review, features, pricing">
+    <title>Loading Tool Details... - SaaS Tools Directory</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal">
 
@@ -28,7 +28,7 @@
                 <a href="/blog.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Blog</a>
                 <a href="/submit-tool.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Submit Tool</a>
                 <a href="/faq.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">FAQ</a>
-                <a href="/admin.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Admin</a>
+                <a href="/admin.html" id="adminLink" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400" style="display:none;">Admin</a>
                 
                 <label for="darkModeToggle" class="flex items-center cursor-pointer">
                     <div class="relative">
@@ -42,72 +42,69 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-8">
-        <div id="toolDetail" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-            <div class="flex flex-col md:flex-row items-center md:items-start md:space-x-8">
-                <img id="toolLogo" src="" alt="Tool Logo" class="w-32 h-32 object-contain mb-6 md:mb-0 rounded-full border border-gray-200 dark:border-gray-700">
-                <div class="text-center md:text-left flex-grow">
-                    <h1 id="toolName" class="text-4xl font-bold text-gray-900 dark:text-white mb-2"></h1>
-                    <p id="toolCategory" class="text-blue-600 dark:text-blue-400 font-medium text-lg mb-2"></p>
-                    <div class="flex items-center justify-center md:justify-start mb-4">
-                        <span id="toolRating" class="text-yellow-500 text-xl mr-2"></span>
-                        <span id="toolClicks" class="text-gray-500 text-sm"></span>
-                    </div>
-                    <p id="toolDescription" class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-6"></p>
-                    <div class="flex justify-center md:justify-start space-x-4">
-                        <a id="visitWebsiteBtn" href="#" target="_blank" rel="noopener noreferrer" class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 text-lg font-semibold">Visit Website</a>
-                        <a id="compareToolBtn" href="#" class="px-8 py-3 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-300 text-lg font-semibold">Compare This Tool</a>
-                    </div>
+    <main class="container mx-auto px-6 py-8 min-h-screen">
+        <div id="loading" class="text-center text-xl font-semibold text-gray-700 dark:text-gray-300 mt-16">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Loading tool details...
+        </div>
+
+        <div id="toolDetail" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+            <div class="flex flex-col md:flex-row items-center md:items-start mb-8">
+                <div class="md:w-1/4 flex justify-center md:justify-start mb-6 md:mb-0">
+                    <img id="toolLogo" src="" alt="Tool Logo" class="w-32 h-32 object-contain rounded-lg border border-gray-200 dark:border-gray-700 p-2">
+                </div>
+                <div class="md:w-3/4 text-center md:text-left">
+                    <h1 id="toolName" class="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white mb-2"></h1>
+                    <p id="toolCategory" class="text-lg text-blue-600 dark:text-blue-400 font-semibold mb-4"></p>
+                    <p id="toolDescription" class="text-gray-700 dark:text-gray-300 text-lg mb-6"></p>
+                    <a id="toolUrl" href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                        Visit Website <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
                 </div>
             </div>
 
-            <hr class="my-8 border-gray-200 dark:border-gray-700">
-
-            <section class="mt-8">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Key Features</h2>
-                <ul id="toolFeatures" class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Example feature 1: Streamlined Workflow</li>
-                    <li>Example feature 2: Real-time Collaboration</li>
-                    <li>Example feature 3: Advanced Reporting</li>
-                    <li>Example feature 4: 24/7 Customer Support</li>
-                </ul>
-            </section>
-
-            <section class="mt-8">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Tags</h2>
-                <div id="toolTags" class="flex flex-wrap gap-2">
+            <div id="fullDescriptionSection" class="mb-8 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Detailed Overview</h2>
+                <div id="toolFullDescription" class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
                     </div>
-            </section>
+            </div>
 
-            <section class="mt-8">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">What Users Are Saying</h2>
-                <div id="toolTestimonials" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm">
-                        <p class="italic text-gray-700 dark:text-gray-300 mb-3">"This tool has transformed our operations. Highly intuitive and powerful!"</p>
-                        <div class="flex items-center">
-                            <img src="https://via.placeholder.com/40" alt="Reviewer Avatar" class="w-10 h-10 rounded-full mr-3">
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">Jane Doe</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">CEO, Tech Innovators</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm">
-                        <p class="italic text-gray-700 dark:text-gray-300 mb-3">"An essential part of our stack. The support team is fantastic."</p>
-                        <div class="flex items-center">
-                            <img src="https://via.placeholder.com/40" alt="Reviewer Avatar" class="w-10 h-10 rounded-full mr-3">
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">John Smith</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Product Manager, Global Solutions</p>
-                            </div>
-                        </div>
-                    </div>
+            <div id="featuresSection" class="mb-8 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Key Features</h2>
+                <ul id="toolFeatures" class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 pl-4">
+                    </ul>
+            </div>
+
+            <div id="pricingSection" class="mb-8 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Pricing</h2>
+                <p id="toolPricingModel" class="text-gray-700 dark:text-gray-300 mb-2"></p>
+                <p id="toolPricingDetails" class="text-gray-600 dark:text-gray-400 text-sm italic"></p>
+            </div>
+
+            <div id="platformsSection" class="mb-8 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Available Platforms</h2>
+                <p id="toolPlatforms" class="text-gray-700 dark:text-gray-300"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div id="prosSection" class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-inner hidden">
+                    <h3 class="text-xl font-semibold text-green-600 dark:text-green-400 mb-3"><i class="fas fa-check-circle mr-2"></i> Pros</h3>
+                    <ul id="toolPros" class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-200">
+                        </ul>
                 </div>
-            </section>
+                <div id="consSection" class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-inner hidden">
+                    <h3 class="text-xl font-semibold text-red-600 dark:text-red-400 mb-3"><i class="fas fa-times-circle mr-2"></i> Cons</h3>
+                    <ul id="toolCons" class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-200">
+                        </ul>
+                </div>
+            </div>
+            
         </div>
 
-        <div id="loadingMessage" class="text-center text-gray-600 dark:text-gray-300 text-xl mt-12">Loading tool details...</div>
-        <div id="errorMessage" class="hidden text-center text-red-500 text-xl mt-12">Tool not found or an error occurred.</div>
+        <div id="notFound" class="hidden text-center mt-16">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Tool Not Found</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">The SaaS tool you are looking for does not exist or has been removed.</p>
+            <a href="/" class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">Go to Homepage</a>
+        </div>
     </main>
 
     <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12">
@@ -131,120 +128,163 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const toolDetailDiv = document.getElementById('toolDetail');
-            const loadingMessage = document.getElementById('loadingMessage');
-            const errorMessage = document.getElementById('errorMessage');
+            setSeoMetaData('tool-detail', "Loading Tool Details...", "Discover detailed information about a SaaS tool.", "SaaS tool, software, review"); // Initial SEO
 
-            // Elements to populate
-            const toolLogo = document.getElementById('toolLogo');
-            const toolName = document.getElementById('toolName');
-            const toolCategory = document.getElementById('toolCategory');
-            const toolRating = document.getElementById('toolRating');
-            const toolClicks = document.getElementById('toolClicks');
-            const toolDescription = document.getElementById('toolDescription');
-            const visitWebsiteBtn = document.getElementById('visitWebsiteBtn');
-            const compareToolBtn = document.getElementById('compareToolBtn');
-            const toolFeatures = document.getElementById('toolFeatures');
-            const toolTags = document.getElementById('toolTags');
-            const toolTestimonials = document.getElementById('toolTestimonials'); // For future dynamic loading
+            const loadingEl = document.getElementById('loading');
+            const toolDetailEl = document.getElementById('toolDetail');
+            const notFoundEl = document.getElementById('notFound');
 
-            const toolId = getUrlParameter('id');
+            const toolLogoEl = document.getElementById('toolLogo');
+            const toolNameEl = document.getElementById('toolName');
+            const toolCategoryEl = document.getElementById('toolCategory');
+            const toolDescriptionEl = document.getElementById('toolDescription');
+            const toolUrlEl = document.getElementById('toolUrl');
 
-            if (!toolId) {
-                loadingMessage.classList.add('hidden');
-                toolDetailDiv.classList.add('hidden');
-                errorMessage.textContent = 'Error: Tool ID not provided in URL.';
-                errorMessage.classList.remove('hidden');
-                // Set generic SEO if no ID
-                setSeoMetaData('tool-detail-error', "Tool Not Found - SaaS Tools Directory", "The requested SaaS tool could not be found.", "error, tool not found");
+            const fullDescriptionSection = document.getElementById('fullDescriptionSection');
+            const toolFullDescriptionEl = document.getElementById('toolFullDescription');
+            
+            const featuresSection = document.getElementById('featuresSection');
+            const toolFeaturesList = document.getElementById('toolFeatures');
+
+            const pricingSection = document.getElementById('pricingSection');
+            const toolPricingModelEl = document.getElementById('toolPricingModel');
+            const toolPricingDetailsEl = document.getElementById('toolPricingDetails');
+
+            const platformsSection = document.getElementById('platformsSection');
+            const toolPlatformsEl = document.getElementById('toolPlatforms');
+
+            const prosSection = document.getElementById('prosSection');
+            const toolProsList = document.getElementById('toolPros');
+            const consSection = document.getElementById('consSection');
+            const toolConsList = document.getElementById('toolCons');
+
+            // Function to get query parameter by name
+            function getQueryParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            // Get the tool slug from the URL (e.g., ?slug=figma)
+            const toolSlug = getQueryParam('slug');
+
+            if (!toolSlug) {
+                loadingEl.classList.add('hidden');
+                toolDetailEl.classList.add('hidden');
+                notFoundEl.classList.remove('hidden');
+                setSeoMetaData('tool-not-found', "Tool Not Found - SaaS Tools Directory", "The requested SaaS tool could not be found.", "404, tool not found");
                 return;
             }
 
             try {
-                const tool = await getDocumentById('tools', toolId);
+                // Fetch the tool data from Firestore using the slug
+                // We assume 'slug' field is unique for tools
+                const tools = await getDocumentsByQuery('tools', [{ field: 'slug', operator: '==', value: toolSlug }]);
 
-                if (tool) {
-                    // Update SEO metadata dynamically based on tool data
-                    setSeoMetaData(
-                        `tool-${tool.id}`, // Unique ID for SEO meta collection (e.g., "tool-super-crm")
-                        `${tool.name} - SaaS Tools Directory`,
-                        tool.description.substring(0, 160) + "...", // Truncate description for meta
-                        `${tool.name}, ${tool.category}, ${tool.tags ? tool.tags.join(', ') : ''}, SaaS tool, software`
-                    );
-
-                    toolLogo.src = tool.logoURL;
-                    toolLogo.alt = `${tool.name} Logo`;
-                    toolName.textContent = tool.name;
-                    toolCategory.textContent = tool.category;
-                    toolRating.innerHTML = `<i class="fas fa-star"></i> ${tool.rating.toFixed(1)}`;
-                    toolClicks.textContent = `(Clicks: ${tool.clicks || 0})`;
-                    toolDescription.textContent = tool.description;
-                    visitWebsiteBtn.href = tool.toolURL;
-
-                    // Handle affiliate click tracking
-                    visitWebsiteBtn.addEventListener('click', async (e) => {
-                        // Let the default link behavior happen after logging the click
-                        await incrementToolClicks(tool.id);
-                        const ip = await getClientIpAddress();
-                        const userAgent = navigator.userAgent;
-                        await logAffiliateClick(tool.id, ip, userAgent);
-                    });
-
-
-                    compareToolBtn.href = `/compare.html?id1=${tool.id}`; // Will need a second tool to complete comparison
-
-                    // Populate Features (assuming description might contain features, or add a 'features' array to tool object)
-                    // For now, these are static placeholders. In a real scenario, you'd likely parse from a rich text field
-                    // or have a dedicated 'features' array in your Firestore `tools` collection.
-                    toolFeatures.innerHTML = '';
-                    if (tool.features && Array.isArray(tool.features)) {
-                        tool.features.forEach(feature => {
-                            const li = document.createElement('li');
-                            li.textContent = feature;
-                            toolFeatures.appendChild(li);
-                        });
-                    } else {
-                        // Fallback or placeholder if no features array
-                        toolFeatures.innerHTML = `<li>Comprehensive functionality</li><li>User-friendly interface</li><li>Robust security</li>`;
-                    }
-
-
-                    // Populate Tags
-                    toolTags.innerHTML = '';
-                    if (tool.tags && Array.isArray(tool.tags)) {
-                        tool.tags.forEach(tag => {
-                            const span = document.createElement('span');
-                            span.className = 'bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-900';
-                            span.textContent = tag;
-                            toolTags.appendChild(span);
-                        });
-                    }
-
-                    // For Testimonials, you would fetch from the `testimonials` collection
-                    // filtering by `toolId` if testimonials were linked directly to tools,
-                    // or just display general testimonials. For now, using static example.
-                    // Example: const toolSpecificTestimonials = await db.collection('testimonials').where('toolId', '==', toolId).get();
-                    // And then dynamically render them into `toolTestimonials`.
-
-
-                    loadingMessage.classList.add('hidden');
-                    toolDetailDiv.classList.remove('hidden');
-                } else {
-                    loadingMessage.classList.add('hidden');
-                    toolDetailDiv.classList.add('hidden');
-                    errorMessage.textContent = 'Tool not found.';
-                    errorMessage.classList.remove('hidden');
-                    setSeoMetaData('tool-not-found', "Tool Not Found - SaaS Tools Directory", "The requested SaaS tool could not be found.", "error, tool not found");
+                if (tools.length === 0 || !tools[0].isApproved) {
+                    loadingEl.classList.add('hidden');
+                    toolDetailEl.classList.add('hidden');
+                    notFoundEl.classList.remove('hidden');
+                    setSeoMetaData('tool-not-found', "Tool Not Found - SaaS Tools Directory", "The requested SaaS tool could not be found.", "404, tool not found");
+                    return;
                 }
+
+                const tool = tools[0]; // Assuming slug is unique, take the first result
+
+                // Update page title and SEO
+                document.title = `${tool.name} - SaaS Tools Directory`;
+                setSeoMetaData(
+                    `tool-detail-${tool.slug}`,
+                    `${tool.name} - SaaS Tools Directory`,
+                    tool.description || `Discover detailed information about ${tool.name}.`,
+                    `${tool.name}, SaaS tool, ${tool.category || ''}, software, review, features, pricing`
+                );
+
+                // Populate tool details
+                toolLogoEl.src = tool.logoUrl || '/placeholder-logo.png'; // Use a placeholder if no logo
+                toolLogoEl.alt = `${tool.name} Logo`;
+                toolNameEl.textContent = tool.name;
+                toolCategoryEl.textContent = tool.category || 'Uncategorized';
+                toolDescriptionEl.textContent = tool.description;
+                toolUrlEl.href = tool.url;
+
+                // Full Description
+                if (tool.fullDescription) {
+                    toolFullDescriptionEl.innerHTML = tool.fullDescription; // Assuming HTML content
+                    fullDescriptionSection.classList.remove('hidden');
+                }
+
+                // Features
+                if (tool.features && tool.features.length > 0) {
+                    toolFeaturesList.innerHTML = tool.features.map(feature => `<li>${feature}</li>`).join('');
+                    featuresSection.classList.remove('hidden');
+                }
+
+                // Pricing Model
+                if (tool.pricingModel && tool.pricingModel.length > 0) {
+                    toolPricingModelEl.textContent = `Pricing Model: ${tool.pricingModel.join(', ')}`;
+                    pricingSection.classList.remove('hidden');
+                }
+                if (tool.pricingDetails) {
+                    toolPricingDetailsEl.textContent = tool.pricingDetails;
+                } else {
+                    toolPricingDetailsEl.classList.add('hidden');
+                }
+
+                // Platforms
+                if (tool.platforms && tool.platforms.length > 0) {
+                    toolPlatformsEl.textContent = `Available on: ${tool.platforms.join(', ')}`;
+                    platformsSection.classList.remove('hidden');
+                }
+
+                // Pros
+                if (tool.pros && tool.pros.length > 0) {
+                    toolProsList.innerHTML = tool.pros.map(item => `<li>${item}</li>`).join('');
+                    prosSection.classList.remove('hidden');
+                }
+
+                // Cons
+                if (tool.cons && tool.cons.length > 0) {
+                    toolConsList.innerHTML = tool.cons.map(item => `<li>${item}</li>`).join('');
+                    consSection.classList.remove('hidden');
+                }
+
+                // Increment views count in Firestore (consider Cloud Function for robust tracking)
+                if (tool.id) {
+                    // Update views for the specific tool
+                    await updateDocument('tools', tool.id, {
+                        views: firebase.firestore.FieldValue.increment(1)
+                    });
+                    // Also update total site views (if siteMetrics/overview exists)
+                    await updateDocument('siteMetrics', 'overview', {
+                        totalViews: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+
+                // Event listener for the "Visit Website" button (to track clicks)
+                toolUrlEl.addEventListener('click', async () => {
+                    if (tool.id) {
+                        await updateDocument('tools', tool.id, {
+                            clicks: firebase.firestore.FieldValue.increment(1)
+                        });
+                        // Also update total site clicks
+                        await updateDocument('siteMetrics', 'overview', {
+                            totalClicks: firebase.firestore.FieldValue.increment(1)
+                        });
+                    }
+                });
+
+
+                loadingEl.classList.add('hidden');
+                toolDetailEl.classList.remove('hidden');
+
             } catch (error) {
                 console.error("Error fetching tool details:", error);
-                loadingMessage.classList.add('hidden');
-                toolDetailDiv.classList.add('hidden');
-                errorMessage.textContent = 'An error occurred while loading tool details.';
-                errorMessage.classList.remove('hidden');
-                setSeoMetaData('tool-error', "Error Loading Tool - SaaS Tools Directory", "There was an error loading the SaaS tool details.", "error, tool loading");
+                loadingEl.classList.add('hidden');
+                toolDetailEl.classList.add('hidden');
+                notFoundEl.classList.remove('hidden');
+                setSeoMetaData('tool-not-found', "Tool Not Found - SaaS Tools Directory", "An error occurred while loading the tool details.", "error, tool not found");
             }
         });
     </script>
 </body>
-                              </html>
+                        </html>
