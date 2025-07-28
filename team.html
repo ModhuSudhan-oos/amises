@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin panel for managing team members and their roles in the SaaS Tools Directory.">
+    <meta name="keywords" content="admin, team management, user roles, Firebase admin, Super Admin">
+    <title>Team Management - SaaS Tools Directory Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindCSS@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal flex">
+
+    <aside class="w-64 bg-gray-900 text-white p-6 min-h-screen shadow-lg">
+        <h2 class="text-3xl font-bold mb-8 text-center">Admin Panel</h2>
+        <nav>
+            <ul>
+                <li class="mb-4">
+                    <a href="/admin.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/add-tool.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-plus-circle mr-3"></i> Add/Edit Tool
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-categories" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tags mr-3"></i> Manage Categories
+                    </a>
+                </li>
+                 <li class="mb-4">
+                    <a href="/blog.html?admin=true" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-blog mr-3"></i> Blog Posts
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/analytics.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-chart-bar mr-3"></i> Analytics
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/team.html" id="teamManagementLink" class="flex items-center text-white bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-users mr-3"></i> Team Members
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-seo" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-globe mr-3"></i> Manage SEO
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-testimonials" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-quote-right mr-3"></i> Testimonials
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-faqs" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-question-circle mr-3"></i> FAQs
+                    </a>
+                </li>
+                <li class="mt-8">
+                    <button id="adminLogoutBtn" class="flex items-center w-full text-red-400 hover:text-white hover:bg-red-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 p-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white mb-8">Manage Team Members</h1>
+
+        <div id="alertMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline" id="alertText"></span>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Add New Team Member</h2>
+            <form id="addTeamMemberForm" class="space-y-4">
+                <div>
+                    <label for="newMemberName" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name</label>
+                    <input type="text" id="newMemberName" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                </div>
+                <div>
+                    <label for="newMemberEmail" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="newMemberEmail" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                </div>
+                <div>
+                    <label for="newMemberRole" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Role</label>
+                    <select id="newMemberRole" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                        <option value="editor">Editor</option>
+                        <option value="superAdmin">Super Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">Add Team Member</button>
+                <div id="addMemberMessage" class="mt-4 p-3 rounded text-center hidden"></div>
+            </form>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Existing Team Members</h2>
+            <div id="teamMembersList" class="overflow-x-auto">
+                <p id="loadingMembers" class="text-center text-gray-600 dark:text-gray-300">Loading team members...</p>
+                </div>
+            <p id="noMembersFound" class="hidden text-center text-gray-600 dark:text-gray-300 mt-4">No team members found.</p>
+        </div>
+
+        <div id="editMemberModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Edit Team Member</h2>
+                <form id="editMemberForm" class="space-y-4">
+                    <input type="hidden" id="editMemberId">
+                    <div>
+                        <label for="editMemberName" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name</label>
+                        <input type="text" id="editMemberName" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                    </div>
+                    <div>
+                        <label for="editMemberEmail" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="editMemberEmail" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" disabled> </div>
+                    <div>
+                        <label for="editMemberRole" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Role</label>
+                        <select id="editMemberRole" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                            <option value="editor">Editor</option>
+                            <option value="superAdmin">Super Admin</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end space-x-4 mt-6">
+                        <button type="button" id="closeEditModal" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-300">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">Save Changes</button>
+                    </div>
+                    <div id="editMemberMessage" class="mt-4 p-3 rounded text-center hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Protect this page: only authenticated Super Admins can access
+            await checkAuthAndRedirect(['superAdmin'], '/login.html');
+
+            setSeoMetaData('team-management', "Team Management - SaaS Tools Directory Admin", "Manage admin team members and their roles for the SaaS Tools Directory.", "admin, team, users, roles, management");
+
+            const addTeamMemberForm = document.getElementById('addTeamMemberForm');
+            const newMemberNameInput = document.getElementById('newMemberName');
+            const newMemberEmailInput = document.getElementById('newMemberEmail');
+            const newMemberRoleSelect = document.getElementById('newMemberRole');
+            const addMemberMessage = document.getElementById('addMemberMessage');
+            
+            const teamMembersListDiv = document.getElementById('teamMembersList');
+            const loadingMembers = document.getElementById('loadingMembers');
+            const noMembersFound = document.getElementById('noMembersFound');
+            const alertMessageDiv = document.getElementById('alertMessage');
+            const alertText = document.getElementById('alertText');
+
+            const editMemberModal = document.getElementById('editMemberModal');
+            const closeEditModalBtn = document.getElementById('closeEditModal');
+            const editMemberForm = document.getElementById('editMemberForm');
+            const editMemberIdInput = document.getElementById('editMemberId');
+            const editMemberNameInput = document.getElementById('editMemberName');
+            const editMemberEmailInput = document.getElementById('editMemberEmail');
+            const editMemberRoleSelect = document.getElementById('editMemberRole');
+            const editMemberMessage = document.getElementById('editMemberMessage');
+
+            // --- Function to Display Alert Messages ---
+            function displayAlert(message, type = 'error') {
+                alertText.textContent = message;
+                alertMessageDiv.className = `bg-${type}-100 border border-${type}-400 text-${type}-700 px-4 py-3 rounded relative mb-6`;
+                alertMessageDiv.classList.remove('hidden');
+                setTimeout(() => {
+                    alertMessageDiv.classList.add('hidden');
+                }, 5000); // Hide after 5 seconds
+            }
+
+            // --- Function to Display Form-specific Messages ---
+            function displayFormMessage(element, message, className) {
+                element.textContent = message;
+                element.className = `mt-4 p-3 rounded text-center ${className}`;
+                element.classList.remove('hidden');
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                }, 3000);
+            }
+
+            // --- Load Team Members ---
+            async function loadTeamMembers() {
+                loadingMembers.classList.remove('hidden');
+                teamMembersListDiv.innerHTML = '<p id="loadingMembers" class="text-center text-gray-600 dark:text-gray-300">Loading team members...</p>'; // Reset
+                noMembersFound.classList.add('hidden');
+
+                try {
+                    const teamMembers = await getAllDocuments('adminUsers');
+                    loadingMembers.classList.add('hidden');
+
+                    if (teamMembers.length === 0) {
+                        noMembersFound.classList.remove('hidden');
+                        return;
+                    }
+
+                    let tableHtml = `
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    `;
+
+                    teamMembers.forEach(member => {
+                        // Get current user's UID to prevent self-deletion or demotion if superAdmin
+                        const currentUser = auth.currentUser;
+                        const isCurrentUser = currentUser && currentUser.uid === member.id;
+                        const currentRole = member.role || 'editor'; // Default to editor if not set
+
+                        tableHtml += `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${member.name || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${member.email}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${currentRole === 'superAdmin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'} dark:bg-opacity-20 dark:text-white">
+                                        ${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button data-id="${member.id}" data-name="${member.name}" data-email="${member.email}" data-role="${currentRole}" class="edit-member-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200 mr-3">Edit</button>
+                                    ${!isCurrentUser ? `
+                                        <button data-id="${member.id}" class="delete-member-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200">Delete</button>
+                                    ` : `<span class="text-gray-400 dark:text-gray-600 cursor-not-allowed" title="Cannot delete yourself">Delete</span>`}
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    tableHtml += `
+                            </tbody>
+                        </table>
+                    `;
+                    teamMembersListDiv.innerHTML = tableHtml;
+
+                    // Attach event listeners for edit and delete buttons
+                    attachMemberActionListeners();
+
+                } catch (error) {
+                    console.error("Error loading team members:", error);
+                    loadingMembers.classList.add('hidden');
+                    displayAlert('Failed to load team members.', 'red');
+                }
+            }
+
+            // --- Attach Listeners for Edit/Delete Buttons ---
+            function attachMemberActionListeners() {
+                teamMembersListDiv.querySelectorAll('.edit-member-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        editMemberIdInput.value = button.dataset.id;
+                        editMemberNameInput.value = button.dataset.name;
+                        editMemberEmailInput.value = button.dataset.email;
+                        editMemberRoleSelect.value = button.dataset.role;
+                        editMemberModal.classList.remove('hidden');
+                        editMemberMessage.classList.add('hidden'); // Clear previous messages
+                    });
+                });
+
+                teamMembersListDiv.querySelectorAll('.delete-member-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const memberId = button.dataset.id;
+                        if (confirm('Are you sure you want to delete this team member? This action cannot be undone and will remove their access.')) {
+                            try {
+                                await deleteDocument('adminUsers', memberId);
+                                // A real application would also need to delete the user from Firebase Auth
+                                // This requires Admin SDK on a backend server (Cloud Functions)
+                                displayAlert('Team member removed successfully. (Note: Firebase Auth deletion requires server-side logic)', 'green');
+                                loadTeamMembers(); // Reload list
+                            } catch (error) {
+                                console.error("Error deleting team member:", error);
+                                displayAlert(`Failed to delete team member: ${error.message}`, 'red');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // --- Add New Team Member Form Submission ---
+            addTeamMemberForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                addMemberMessage.classList.add('hidden');
+                
+                const name = newMemberNameInput.value.trim();
+                const email = newMemberEmailInput.value.trim();
+                const role = newMemberRoleSelect.value;
+
+                // For security reasons, direct user creation with password on client-side is not recommended.
+                // A typical flow would be:
+                // 1. Admin enters email here.
+                // 2. Client-side sends email to Cloud Function.
+                // 3. Cloud Function uses Firebase Admin SDK to create user OR send an invitation email with a link for them to set up their password.
+                // 4. Once the user is created in Auth, their UID is stored in 'adminUsers' collection with their role.
+                
+                // For this project, we'll simulate adding to adminUsers collection.
+                // It's assumed that the user will then log in, and their role from this Firestore document will be picked up by the authStateChanged listener in admin-script.js
+                // YOU WILL STILL NEED TO MANUALLY CREATE THIS USER IN FIREBASE AUTH FOR THEM TO LOG IN.
+                // The email MUST match the email of the user created in Firebase Authentication.
+
+                if (!name || !email || !role) {
+                    displayFormMessage(addMemberMessage, 'Please fill all fields.', 'bg-red-100 text-red-700');
+                    return;
+                }
+                
+                try {
+                    // Check if an adminUser entry with this email already exists
+                    const existingDocs = await db.collection('adminUsers').where('email', '==', email).limit(1).get();
+                    if (!existingDocs.empty) {
+                        displayFormMessage(addMemberMessage, 'A team member with this email already exists.', 'bg-red-100 text-red-700');
+                        return;
+                    }
+
+                    // For a real app, integrate with Firebase Cloud Functions to create the user in Firebase Auth.
+                    // For this example, we directly add to Firestore, assuming the Firebase Auth user will be created manually or via another process.
+                    // The UID will be set upon first login/role assignment if not set here.
+                    await addDocument('adminUsers', {
+                        name: name,
+                        email: email,
+                        role: role,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        // userId: (this would come from Firebase Auth after user creation)
+                    });
+                    
+                    displayFormMessage(addMemberMessage, 'Team member added successfully! Remember to create this user in Firebase Authentication manually or via a separate process.', 'bg-green-100 text-green-700');
+                    addTeamMemberForm.reset();
+                    loadTeamMembers(); // Reload the list
+                } catch (error) {
+                    console.error("Error adding team member:", error);
+                    displayFormMessage(addMemberMessage, `Failed to add team member: ${error.message}`, 'bg-red-100 text-red-700');
+                }
+            });
+
+            // --- Edit Member Form Submission ---
+            editMemberForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                editMemberMessage.classList.add('hidden');
+
+                const memberId = editMemberIdInput.value;
+                const name = editMemberNameInput.value.trim();
+                const role = editMemberRoleSelect.value;
+                const email = editMemberEmailInput.value; // Email is disabled, so we just get its current value
+
+                // Prevent a superAdmin from demoting themselves or deleting themselves
+                const currentUser = auth.currentUser;
+                const currentMemberData = await getDocumentById('adminUsers', memberId);
+                
+                if (currentUser && currentUser.uid === memberId && role !== 'superAdmin' && currentMemberData.role === 'superAdmin') {
+                    displayFormMessage(editMemberMessage, 'Super Admins cannot demote themselves.', 'bg-red-100 text-red-700');
+                    return;
+                }
+
+                try {
+                    await updateDocument('adminUsers', memberId, {
+                        name: name,
+                        role: role
+                    });
+                    displayFormMessage(editMemberMessage, 'Team member updated successfully!', 'bg-green-100 text-green-700');
+                    editMemberModal.classList.add('hidden');
+                    loadTeamMembers(); // Reload list
+                } catch (error) {
+                    console.error("Error updating team member:", error);
+                    displayFormMessage(editMemberMessage, `Failed to update team member: ${error.message}`, 'bg-red-100 text-red-700');
+                }
+            });
+
+            // --- Close Edit Modal ---
+            closeEditModalBtn.addEventListener('click', () => {
+                editMemberModal.classList.add('hidden');
+            });
+
+            // Initial load of team members
+            loadTeamMembers();
+        });
+    </script>
+</body>
+</html>
