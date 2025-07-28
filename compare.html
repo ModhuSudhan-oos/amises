@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compare two SaaS tools side-by-side to make the best choice for your business.">
+    <meta name="keywords" content="SaaS compare, tool comparison, software comparison, choose software">
+    <title>Compare Tools - SaaS Tools Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal">
+
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 text-center z-50 hidden">
+        <p class="text-sm">We use cookies to ensure you get the best experience on our website. By continuing to use our site, you agree to our <a href="/privacy.html" class="underline">Privacy Policy</a>.</p>
+        <button id="acceptCookies" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm">Accept Cookies</button>
+    </div>
+
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">SaaS Directory</a>
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Home</a>
+                <a href="/blog.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Blog</a>
+                <a href="/submit-tool.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Submit Tool</a>
+                <a href="/faq.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">FAQ</a>
+                <a href="/admin.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Admin</a>
+                
+                <label for="darkModeToggle" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="darkModeToggle" class="sr-only">
+                        <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium dark:text-gray-300">Dark Mode</div>
+                </label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-8 text-center">Compare SaaS Tools</h1>
+
+        <div id="comparisonContainer" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div id="tool1Card" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center flex flex-col items-center">
+                    <img id="tool1Logo" src="" alt="Tool 1 Logo" class="w-24 h-24 object-contain mb-4 rounded-full border border-gray-200 dark:border-gray-700">
+                    <h2 id="tool1Name" class="text-2xl font-semibold text-gray-900 dark:text-white mb-2"></h2>
+                    <p id="tool1Category" class="text-blue-600 dark:text-blue-400 font-medium mb-2"></p>
+                    <div class="flex items-center justify-center mb-4">
+                        <span id="tool1Rating" class="text-yellow-500 text-lg mr-1"></span>
+                        <span id="tool1Clicks" class="text-gray-500 text-sm"></span>
+                    </div>
+                    <p id="tool1Description" class="text-gray-700 dark:text-gray-300 text-base line-clamp-4 mb-6"></p>
+                    <a id="tool1Link" href="#" target="_blank" rel="noopener noreferrer" class="mt-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">Visit Website</a>
+                </div>
+
+                <div id="tool2Card" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center flex flex-col items-center">
+                    <img id="tool2Logo" src="" alt="Tool 2 Logo" class="w-24 h-24 object-contain mb-4 rounded-full border border-gray-200 dark:border-gray-700">
+                    <h2 id="tool2Name" class="text-2xl font-semibold text-gray-900 dark:text-white mb-2"></h2>
+                    <p id="tool2Category" class="text-blue-600 dark:text-blue-400 font-medium mb-2"></p>
+                    <div class="flex items-center justify-center mb-4">
+                        <span id="tool2Rating" class="text-yellow-500 text-lg mr-1"></span>
+                        <span id="tool2Clicks" class="text-gray-500 text-sm"></span>
+                    </div>
+                    <p id="tool2Description" class="text-gray-700 dark:text-gray-300 text-base line-clamp-4 mb-6"></p>
+                    <a id="tool2Link" href="#" target="_blank" rel="noopener noreferrer" class="mt-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">Visit Website</a>
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200 dark:border-gray-700">
+
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Feature Comparison</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Feature
+                            </th>
+                            <th id="tableHeader1" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                </th>
+                            <th id="tableHeader2" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                </th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonTableBody" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Category</td>
+                            <td id="tableCategory1" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300"></td>
+                            <td id="tableCategory2" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300"></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Rating</td>
+                            <td id="tableRating1" class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-500"></td>
+                            <td id="tableRating2" class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-500"></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Total Clicks</td>
+                            <td id="tableClicks1" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300"></td>
+                            <td id="tableClicks2" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300"></td>
+                        </tr>
+                        </tbody>
+                </table>
+                <div id="noCommonFeatures" class="hidden text-center text-gray-600 dark:text-gray-300 mt-4">
+                    <p>No common features to compare or no specific features listed for these tools.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="loadingMessage" class="text-center text-gray-600 dark:text-gray-300 text-xl mt-12">Loading comparison...</div>
+        <div id="errorMessage" class="hidden text-center text-red-500 text-xl mt-12">
+            Error: Could not load tools for comparison. Please ensure valid tool IDs are provided.
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-wrap justify-center gap-8 mb-6">
+                <a href="/about.html" class="hover:text-blue-400">About Us</a>
+                <a href="/privacy.html" class="hover:text-blue-400">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-blue-400">Terms of Service</a>
+                <a href="/contact.html" class="hover:text-blue-400">Contact</a>
+                <a href="https://github.com/your-username/your-repo-name" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+            <p>&copy; 2024 SaaS Tools Directory. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const comparisonContainer = document.getElementById('comparisonContainer');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Elements for Tool 1
+            const tool1Logo = document.getElementById('tool1Logo');
+            const tool1Name = document.getElementById('tool1Name');
+            const tool1Category = document.getElementById('tool1Category');
+            const tool1Rating = document.getElementById('tool1Rating');
+            const tool1Clicks = document.getElementById('tool1Clicks');
+            const tool1Description = document.getElementById('tool1Description');
+            const tool1Link = document.getElementById('tool1Link');
+            const tableHeader1 = document.getElementById('tableHeader1');
+            const tableCategory1 = document.getElementById('tableCategory1');
+            const tableRating1 = document.getElementById('tableRating1');
+            const tableClicks1 = document.getElementById('tableClicks1');
+
+            // Elements for Tool 2
+            const tool2Logo = document.getElementById('tool2Logo');
+            const tool2Name = document.getElementById('tool2Name');
+            const tool2Category = document.getElementById('tool2Category');
+            const tool2Rating = document.getElementById('tool2Rating');
+            const tool2Clicks = document.getElementById('tool2Clicks');
+            const tool2Description = document.getElementById('tool2Description');
+            const tool2Link = document.getElementById('tool2Link');
+            const tableHeader2 = document.getElementById('tableHeader2');
+            const tableCategory2 = document.getElementById('tableCategory2');
+            const tableRating2 = document.getElementById('tableRating2');
+            const tableClicks2 = document.getElementById('tableClicks2');
+
+            const comparisonTableBody = document.getElementById('comparisonTableBody');
+            const noCommonFeaturesMessage = document.getElementById('noCommonFeatures');
+
+            const id1 = getUrlParameter('id1');
+            const id2 = getUrlParameter('id2');
+
+            if (!id1 || !id2) {
+                loadingMessage.classList.add('hidden');
+                comparisonContainer.classList.add('hidden');
+                errorMessage.textContent = 'Error: Both tool IDs (id1 and id2) must be provided in the URL for comparison.';
+                errorMessage.classList.remove('hidden');
+                setSeoMetaData('compare-error', "Invalid Comparison - SaaS Tools Directory", "Please provide two valid tool IDs to compare.", "compare error, invalid IDs");
+                return;
+            }
+
+            try {
+                const [tool1, tool2] = await Promise.all([
+                    getDocumentById('tools', id1),
+                    getDocumentById('tools', id2)
+                ]);
+
+                if (tool1 && tool2) {
+                    // Update SEO metadata dynamically
+                    setSeoMetaData(
+                        `compare-${tool1.id}-${tool2.id}`,
+                        `Compare ${tool1.name} vs ${tool2.name} - SaaS Tools Directory`,
+                        `Side-by-side comparison of ${tool1.name} and ${tool2.name} to help you choose the best SaaS tool.`,
+                        `${tool1.name}, ${tool2.name}, SaaS comparison, software comparison, features, pricing` // Add more relevant keywords as features grow
+                    );
+
+                    // Populate Tool 1 details
+                    tool1Logo.src = tool1.logoURL;
+                    tool1Logo.alt = `${tool1.name} Logo`;
+                    tool1Name.textContent = tool1.name;
+                    tool1Category.textContent = tool1.category;
+                    tool1Rating.innerHTML = `<i class="fas fa-star"></i> ${tool1.rating.toFixed(1)}`;
+                    tool1Clicks.textContent = `(Clicks: ${tool1.clicks || 0})`;
+                    tool1Description.textContent = tool1.description;
+                    tool1Link.href = tool1.toolURL;
+                    tool1Link.onclick = async () => {
+                        await incrementToolClicks(tool1.id);
+                        const ip = await getClientIpAddress();
+                        const userAgent = navigator.userAgent;
+                        await logAffiliateClick(tool1.id, ip, userAgent);
+                    };
+                    tableHeader1.textContent = tool1.name;
+                    tableCategory1.textContent = tool1.category;
+                    tableRating1.innerHTML = `<i class="fas fa-star"></i> ${tool1.rating.toFixed(1)}`;
+                    tableClicks1.textContent = tool1.clicks || 0;
+
+
+                    // Populate Tool 2 details
+                    tool2Logo.src = tool2.logoURL;
+                    tool2Logo.alt = `${tool2.name} Logo`;
+                    tool2Name.textContent = tool2.name;
+                    tool2Category.textContent = tool2.category;
+                    tool2Rating.innerHTML = `<i class="fas fa-star"></i> ${tool2.rating.toFixed(1)}`;
+                    tool2Clicks.textContent = `(Clicks: ${tool2.clicks || 0})`;
+                    tool2Description.textContent = tool2.description;
+                    tool2Link.href = tool2.toolURL;
+                    tool2Link.onclick = async () => {
+                        await incrementToolClicks(tool2.id);
+                        const ip = await getClientIpAddress();
+                        const userAgent = navigator.userAgent;
+                        await logAffiliateClick(tool2.id, ip, userAgent);
+                    };
+                    tableHeader2.textContent = tool2.name;
+                    tableCategory2.textContent = tool2.category;
+                    tableRating2.innerHTML = `<i class="fas fa-star"></i> ${tool2.rating.toFixed(1)}`;
+                    tableClicks2.textContent = tool2.clicks || 0;
+
+                    // Populate common features in the table
+                    // Assuming 'features' is an array of strings in your tool document.
+                    // You might need to refine this to compare specific feature keys.
+                    const features1 = new Set(tool1.features || []);
+                    const features2 = new Set(tool2.features || []);
+
+                    const allUniqueFeatures = new Set([...features1, ...features2]);
+
+                    let hasCommonFeatures = false;
+                    if (allUniqueFeatures.size > 0) {
+                        allUniqueFeatures.forEach(feature => {
+                            hasCommonFeatures = true;
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${feature}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300">
+                                    ${features1.has(feature) ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' : '<i class="fas fa-times-circle text-red-500 text-lg"></i>'}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300">
+                                    ${features2.has(feature) ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' : '<i class="fas fa-times-circle text-red-500 text-lg"></i>'}
+                                </td>
+                            `;
+                            comparisonTableBody.appendChild(row);
+                        });
+                    }
+
+                    if (!hasCommonFeatures) {
+                         // Only show if no new feature rows were added beyond the initial static ones.
+                         // This implies that either features array is empty for both or there are no common features.
+                        noCommonFeaturesMessage.classList.remove('hidden');
+                    }
+
+
+                    loadingMessage.classList.add('hidden');
+                    comparisonContainer.classList.remove('hidden');
+
+                } else {
+                    loadingMessage.classList.add('hidden');
+                    comparisonContainer.classList.add('hidden');
+                    errorMessage.textContent = 'One or both tools not found.';
+                    errorMessage.classList.remove('hidden');
+                    setSeoMetaData('compare-not-found', "Comparison Tools Not Found - SaaS Tools Directory", "One or more tools could not be found for comparison.", "compare error, tools not found");
+                }
+            } catch (error) {
+                console.error("Error fetching tool comparison details:", error);
+                loadingMessage.classList.add('hidden');
+                comparisonContainer.classList.add('hidden');
+                errorMessage.textContent = 'An error occurred while loading tool comparison details.';
+                errorMessage.classList.remove('hidden');
+                setSeoMetaData('compare-general-error', "Error Comparing Tools - SaaS Tools Directory", "An unexpected error occurred during tool comparison.", "compare error, system error");
+            }
+        });
+    </script>
+</body>
+  </html>
