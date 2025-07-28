@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about the SaaS Tools Directory, our mission to help businesses find the best software, and our commitment to unbiased reviews.">
+    <meta name="keywords" content="about us, SaaS directory mission, why choose us, software reviews, technology platform">
+    <title>About Us - SaaS Tools Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal">
+
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 text-center z-50 hidden">
+        <p class="text-sm">We use cookies to ensure you get the best experience on our website. By continuing to use our site, you agree to our <a href="/privacy.html" class="underline">Privacy Policy</a>.</p>
+        <button id="acceptCookies" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm">Accept Cookies</button>
+    </div>
+
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">SaaS Directory</a>
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Home</a>
+                <a href="/blog.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Blog</a>
+                <a href="/submit-tool.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Submit Tool</a>
+                <a href="/faq.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">FAQ</a>
+                <a href="/admin.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Admin</a>
+                
+                <label for="darkModeToggle" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="darkModeToggle" class="sr-only">
+                        <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium dark:text-gray-300">Dark Mode</div>
+                </label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-8 text-center">About Us</h1>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-4xl mx-auto prose dark:prose-invert">
+            <p class="text-lg leading-relaxed mb-6">
+                Welcome to the **SaaS Tools Directory**, your ultimate resource for discovering, comparing, and choosing the best Software-as-a-Service (SaaS) solutions for your business needs. In today's fast-paced digital landscape, finding the right tools can be overwhelming. That's where we come in.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Our Mission</h2>
+            <p class="mb-4">
+                Our mission is simple: to **simplify the software selection process** for businesses of all sizes. We aim to be the most comprehensive, unbiased, and user-friendly directory of SaaS tools available. We believe that every business, from startups to enterprises, deserves access to the right technology to thrive.
+            </p>
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li>**Empower Decision-Makers:** Provide clear, concise, and actionable information to help you make informed choices.</li>
+                <li>**Showcase Innovation:** Highlight emerging and innovative SaaS solutions alongside established leaders.</li>
+                <li>**Foster Growth:** Connect businesses with tools that streamline operations, boost productivity, and drive growth.</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">What We Offer</h2>
+            <p class="mb-4">
+                Our directory features a wide range of SaaS categories, from CRM and project management to marketing automation and AI tools. For each tool, you'll find:
+            </p>
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li>Detailed descriptions and key features.</li>
+                <li>Direct links to the official websites (often affiliate links, supporting our platform).</li>
+                <li>User ratings and reviews (coming soon!).</li>
+                <li>Comparison features to help you weigh options side-by-side.</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Our Commitment to You</h2>
+            <p class="mb-4">
+                We are committed to maintaining the integrity and quality of our listings. Our team works diligently to ensure that the information provided is accurate and up-to-date. While we may use affiliate links to sustain our operations, our primary goal is always to serve our users by providing valuable, unbiased resources.
+            </p>
+
+            <p class="text-lg leading-relaxed pt-4 border-t border-gray-200 dark:border-gray-700 mt-8">
+                Thank you for choosing the SaaS Tools Directory as your trusted partner in navigating the world of software. We're here to help you succeed!
+            </p>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-wrap justify-center gap-8 mb-6">
+                <a href="/about.html" class="hover:text-blue-400">About Us</a>
+                <a href="/privacy.html" class="hover:text-blue-400">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-blue-400">Terms of Service</a>
+                <a href="/contact.html" class="hover:text-blue-400">Contact</a>
+                <a href="https://github.com/your-username/your-repo-name" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+            <p>&copy; 2024 SaaS Tools Directory. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic SEO metadata for the about page
+            setSeoMetaData('about', "About Us - SaaS Tools Directory", "Learn about the mission, vision, and commitment of the SaaS Tools Directory in helping businesses find the right software solutions.", "about us, mission, vision, SaaS directory, company info");
+            // No Firebase data fetching needed for this static content page
+        });
+    </script>
+</body>
+</html>
