@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin dashboard for website analytics and performance monitoring of the SaaS Tools Directory.">
+    <meta name="keywords" content="admin, analytics, dashboard, website metrics, tool views, clicks, performance">
+    <title>Analytics Dashboard - SaaS Tools Directory Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal flex">
+
+    <aside class="w-64 bg-gray-900 text-white p-6 min-h-screen shadow-lg">
+        <h2 class="text-3xl font-bold mb-8 text-center">Admin Panel</h2>
+        <nav>
+            <ul>
+                <li class="mb-4">
+                    <a href="/admin.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/add-tool.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-plus-circle mr-3"></i> Add/Edit Tool
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-categories" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tags mr-3"></i> Manage Categories
+                    </a>
+                </li>
+                 <li class="mb-4">
+                    <a href="/blog.html?admin=true" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-blog mr-3"></i> Blog Posts
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/analytics.html" class="flex items-center text-white bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-chart-bar mr-3"></i> Analytics
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/team.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-users mr-3"></i> Team Members
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-seo" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-globe mr-3"></i> Manage SEO
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-testimonials" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-quote-right mr-3"></i> Testimonials
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-faqs" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-question-circle mr-3"></i> FAQs
+                    </a>
+                </li>
+                <li class="mt-8">
+                    <button id="adminLogoutBtn" class="flex items-center w-full text-red-400 hover:text-white hover:bg-red-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 p-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white mb-8">Analytics Dashboard</h1>
+
+        <div id="analyticsMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline" id="analyticsAlertText"></span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+                <p class="text-gray-500 dark:text-gray-400">Total Tools</p>
+                <p id="totalTools" class="text-4xl font-bold text-blue-600 dark:text-blue-400 mt-2">...</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+                <p class="text-gray-500 dark:text-gray-400">Total Views (All Time)</p>
+                <p id="totalViews" class="text-4xl font-bold text-green-600 dark:text-green-400 mt-2">...</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+                <p class="text-gray-500 dark:text-gray-400">Total Clicks (All Time)</p>
+                <p id="totalClicks" class="text-4xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tool Views Over Time</h2>
+                <div class="relative h-80">
+                    <canvas id="viewsChart"></canvas>
+                </div>
+                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <p>This chart shows the total views of all tools over the last 30 days.</p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Top 10 Tools by Views</h2>
+                <div class="relative h-80">
+                    <canvas id="topToolsChart"></canvas>
+                </div>
+                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <p>Displays the 10 most viewed tools in the directory.</p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 lg:col-span-2">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tool Category Distribution</h2>
+                <div class="relative h-96">
+                    <canvas id="categoryDistributionChart"></canvas>
+                </div>
+                 <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <p>Shows the number of tools listed in each category.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        // Global chart instances to destroy them before re-rendering
+        let viewsChartInstance = null;
+        let topToolsChartInstance = null;
+        let categoryDistributionChartInstance = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Protect this page: only authenticated Admins can access
+            await checkAuthAndRedirect(['editor', 'superAdmin'], '/login.html');
+
+            setSeoMetaData('analytics', "Analytics Dashboard - SaaS Tools Directory Admin", "View website performance, tool views, and user engagement metrics.", "analytics, dashboard, metrics, traffic, admin");
+
+            const totalToolsEl = document.getElementById('totalTools');
+            const totalViewsEl = document.getElementById('totalViews');
+            const totalClicksEl = document.getElementById('totalClicks');
+            const analyticsMessageDiv = document.getElementById('analyticsMessage');
+            const analyticsAlertText = document.getElementById('analyticsAlertText');
+
+            // --- Function to Display Alert Messages ---
+            function displayAnalyticsAlert(message, type = 'error') {
+                analyticsAlertText.textContent = message;
+                analyticsMessageDiv.className = `bg-${type}-100 border border-${type}-400 text-${type}-700 px-4 py-3 rounded relative mb-6`;
+                analyticsMessageDiv.classList.remove('hidden');
+                setTimeout(() => {
+                    analyticsMessageDiv.classList.add('hidden');
+                }, 5000);
+            }
+
+            // --- Fetch and Display Overview Data ---
+            async function loadOverviewData() {
+                try {
+                    // Total Tools
+                    const toolsSnapshot = await db.collection('tools').get();
+                    totalToolsEl.textContent = toolsSnapshot.size;
+
+                    // Total Views & Clicks (Requires a 'metrics' collection)
+                    // In a real app, you'd increment counts in Firestore rules or Cloud Functions
+                    // For now, let's assume a single 'siteMetrics' document
+                    const metricsDoc = await db.collection('siteMetrics').doc('overview').get();
+                    if (metricsDoc.exists) {
+                        const data = metricsDoc.data();
+                        totalViewsEl.textContent = data.totalViews || 0;
+                        totalClicksEl.textContent = data.totalClicks || 0;
+                    } else {
+                        totalViewsEl.textContent = 0;
+                        totalClicksEl.textContent = 0;
+                        console.warn("No 'siteMetrics/overview' document found. Analytics data might be missing.");
+                    }
+
+                } catch (error) {
+                    console.error("Error loading overview data:", error);
+                    displayAnalyticsAlert(`Failed to load overview data: ${error.message}`);
+                }
+            }
+
+            // --- Render Tool Views Over Time Chart ---
+            async function renderViewsChart() {
+                if (viewsChartInstance) viewsChartInstance.destroy(); // Destroy old chart instance
+
+                const ctx = document.getElementById('viewsChart').getContext('2d');
+                
+                // --- Dummy Data Generation for Views Over Time ---
+                // In a real app, you'd query a 'dailyMetrics' or 'viewLogs' collection
+                const labels = [];
+                const data = [];
+                const today = new Date();
+                for (let i = 29; i >= 0; i--) {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                    // Simulate random daily views
+                    data.push(Math.floor(Math.random() * 200) + 50); 
+                }
+                // --- End Dummy Data ---
+
+                viewsChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total Views',
+                            data: data,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // --- Render Top 10 Tools Chart ---
+            async function renderTopToolsChart() {
+                if (topToolsChartInstance) topToolsChartInstance.destroy(); // Destroy old chart instance
+
+                const ctx = document.getElementById('topToolsChart').getContext('2d');
+
+                // --- Dummy Data Generation for Top Tools ---
+                // In a real app, you'd fetch tools, sort by a 'viewsCount' field
+                const topToolsData = [
+                    { name: 'Tool A', views: 1200 },
+                    { name: 'Tool B', views: 1150 },
+                    { name: 'Tool C', views: 1000 },
+                    { name: 'Tool D', views: 950 },
+                    { name: 'Tool E', views: 800 },
+                    { name: 'Tool F', views: 750 },
+                    { name: 'Tool G', views: 600 },
+                    { name: 'Tool H', views: 550 },
+                    { name: 'Tool I', views: 400 },
+                    { name: 'Tool J', views: 350 },
+                ];
+                const labels = topToolsData.map(tool => tool.name);
+                const data = topToolsData.map(tool => tool.views);
+                // --- End Dummy Data ---
+
+                topToolsChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Views',
+                            data: data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bars
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // --- Render Category Distribution Chart ---
+            async function renderCategoryDistributionChart() {
+                if (categoryDistributionChartInstance) categoryDistributionChartInstance.destroy(); // Destroy old chart instance
+
+                const ctx = document.getElementById('categoryDistributionChart').getContext('2d');
+                
+                // --- Data for Category Distribution ---
+                // Fetch categories and count tools in each
+                const categoriesMap = {}; // { 'Category Name': count }
+                try {
+                    const toolsSnapshot = await db.collection('tools').get();
+                    toolsSnapshot.forEach(doc => {
+                        const tool = doc.data();
+                        const category = tool.category || 'Uncategorized';
+                        categoriesMap[category] = (categoriesMap[category] || 0) + 1;
+                    });
+                } catch (error) {
+                    console.error("Error fetching categories for distribution:", error);
+                    displayAnalyticsAlert(`Failed to load category data: ${error.message}`);
+                    return; // Exit if data fetching fails
+                }
+
+                const labels = Object.keys(categoriesMap);
+                const data = Object.values(categoriesMap);
+
+                // Generate a consistent set of colors
+                const backgroundColors = [
+                    '#4CAF50', '#2196F3', '#FFC107', '#FF5722', '#9C27B0',
+                    '#00BCD4', '#8BC34A', '#FF9800', '#F44336', '#673AB7',
+                    '#CDDC39', '#009688', '#FFEB3B', '#E91E63', '#3F51B5'
+                ];
+                const borderColors = backgroundColors.map(color => color + 'E6'); // Slightly darker for border
+
+                categoryDistributionChartInstance = new Chart(ctx, {
+                    type: 'pie', // Or 'doughnut'
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors.slice(0, labels.length), // Use enough colors
+                            borderColor: borderColors.slice(0, labels.length),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right', // Or 'top', 'bottom', 'left'
+                                labels: {
+                                    color: document.body.classList.contains('dark') ? '#E5E7EB' : '#1F2937' // Dynamic legend color
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- Initial Load of All Analytics ---
+            async function loadAnalytics() {
+                await loadOverviewData();
+                await renderViewsChart();
+                await renderTopToolsChart();
+                await renderCategoryDistributionChart();
+            }
+
+            // Run initial load
+            loadAnalytics();
+
+            // Handle dark mode changes to update chart colors
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('change', () => {
+                // Re-render charts when dark mode changes to apply correct text colors
+                if (viewsChartInstance) viewsChartInstance.destroy();
+                if (topToolsChartInstance) topToolsChartInstance.destroy();
+                if (categoryDistributionChartInstance) categoryDistributionChartInstance.destroy();
+                
+                // Re-render all charts
+                renderViewsChart();
+                renderTopToolsChart();
+                renderCategoryDistributionChart();
+            });
+        });
+    </script>
+</body>
+          </html>
