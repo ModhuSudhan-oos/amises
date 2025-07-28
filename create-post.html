@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create or edit blog posts for the SaaS Tools Directory.">
+    <meta name="keywords" content="create blog post, edit blog, admin, content management, Firebase storage">
+    <title>Manage Blog Post - SaaS Tools Directory Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script> </head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal flex">
+
+    <aside class="w-64 bg-gray-900 text-white p-6 min-h-screen shadow-lg">
+        <h2 class="text-3xl font-bold mb-8 text-center">Admin Panel</h2>
+        <nav>
+            <ul>
+                <li class="mb-4">
+                    <a href="/admin.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/add-tool.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-plus-circle mr-3"></i> Add/Edit Tool
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-categories" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tags mr-3"></i> Manage Categories
+                    </a>
+                </li>
+                 <li class="mb-4">
+                    <a href="/blog.html?admin=true" class="flex items-center text-white bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-blog mr-3"></i> Blog Posts
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/analytics.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-chart-bar mr-3"></i> Analytics
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/team.html" id="teamManagementLink" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200 hidden">
+                        <i class="fas fa-users mr-3"></i> Team Members
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-seo" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-globe mr-3"></i> Manage SEO
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-testimonials" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-quote-right mr-3"></i> Testimonials
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-faqs" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-question-circle mr-3"></i> FAQs
+                    </a>
+                </li>
+                <li class="mt-8">
+                    <button id="adminLogoutBtn" class="flex items-center w-full text-red-400 hover:text-white hover:bg-red-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 p-8">
+        <h1 id="pageTitle" class="text-4xl font-extrabold text-gray-800 dark:text-white mb-8">Create New Blog Post</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+            <form id="blogPostForm" class="space-y-6">
+                <div>
+                    <label for="postTitle" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Title</label>
+                    <input type="text" id="postTitle" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                </div>
+                <div>
+                    <label for="postSlug" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Slug (URL-friendly)</label>
+                    <input type="text" id="postSlug" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="e.g., my-awesome-blog-post" required>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">This will be used in the URL: /post.html?slug=your-slug</p>
+                </div>
+                <div>
+                    <label for="postExcerpt" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Excerpt (Short Description for listing)</label>
+                    <textarea id="postExcerpt" rows="2" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"></textarea>
+                </div>
+                <div>
+                    <label for="postContent" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Content (HTML/Markdown)</label>
+                    <textarea id="postContent" rows="15" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required></textarea>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">You can use basic HTML tags for formatting (e.g., &lt;p&gt;, &lt;h2&gt;, &lt;ul&gt;, &lt;strong&gt;).</p>
+                </div>
+                <div>
+                    <label for="postCategory" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Category</label>
+                    <input type="text" id="postCategory" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="e.g., SaaS Trends, Productivity, AI">
+                </div>
+                <div>
+                    <label for="postTags" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Tags (comma-separated)</label>
+                    <input type="text" id="postTags" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="CRM, AI, productivity, marketing">
+                </div>
+                <div>
+                    <label for="postAuthor" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Author Name</label>
+                    <input type="text" id="postAuthor" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                </div>
+                <div>
+                    <label for="postThumbnail" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Thumbnail Image (Optional, for blog listing)</label>
+                    <input type="file" id="postThumbnail" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">PNG, JPG, JPEG up to 2MB. Recommended: 16:9 aspect ratio.</p>
+                    <img id="currentThumbnailPreview" src="" alt="Current Thumbnail Preview" class="mt-4 w-48 h-auto object-contain hidden border border-gray-200 dark:border-gray-700">
+                    <p id="currentThumbnailUrlDisplay" class="text-sm text-gray-600 dark:text-gray-400 mt-2 hidden break-all"></p>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline transition duration-300 w-full">Create Post</button>
+                <div id="formMessage" class="mt-4 p-3 rounded text-center hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Protect this page: only authenticated Super Admins or Editors can access
+            await checkAuthAndRedirect(['superAdmin', 'editor'], '/login.html');
+
+            const storage = firebase.storage();
+            const storageRef = storage.ref();
+
+            const pageTitle = document.getElementById('pageTitle');
+            const blogPostForm = document.getElementById('blogPostForm');
+            const postTitleInput = document.getElementById('postTitle');
+            const postSlugInput = document.getElementById('postSlug');
+            const postExcerptInput = document.getElementById('postExcerpt');
+            const postContentInput = document.getElementById('postContent');
+            const postCategoryInput = document.getElementById('postCategory');
+            const postTagsInput = document.getElementById('postTags');
+            const postAuthorInput = document.getElementById('postAuthor');
+            const postThumbnailInput = document.getElementById('postThumbnail');
+            const currentThumbnailPreview = document.getElementById('currentThumbnailPreview');
+            const currentThumbnailUrlDisplay = document.getElementById('currentThumbnailUrlDisplay');
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+
+            const postId = getUrlParameter('id'); // Check for ID in URL for edit mode
+            let currentThumbnailURL = ''; // To store the thumbnail URL during edit
+            let isEditMode = false;
+
+            if (postId) {
+                isEditMode = true;
+                pageTitle.textContent = 'Edit Blog Post';
+                submitBtn.textContent = 'Update Post';
+                await loadPostDataForEdit(postId);
+            } else {
+                pageTitle.textContent = 'Create New Blog Post';
+                submitBtn.textContent = 'Create Post';
+                // Pre-fill author if logged in user has a name in their admin profile
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        const adminDoc = await db.collection('adminUsers').doc(user.uid).get();
+                        if (adminDoc.exists && adminDoc.data().name) {
+                            postAuthorInput.value = adminDoc.data().name;
+                        }
+                    }
+                });
+            }
+
+            // Set dynamic SEO metadata
+            setSeoMetaData('create-edit-post', "Manage Blog Post - SaaS Tools Directory Admin", "Create new or edit existing blog posts for the directory's blog.", "admin, create blog, edit blog, content management");
+
+
+            // Function to generate slug from title (simple version)
+            postTitleInput.addEventListener('input', () => {
+                if (!isEditMode) { // Only auto-generate slug for new posts
+                    const title = postTitleInput.value;
+                    postSlugInput.value = title.toLowerCase()
+                                            .replace(/[^a-z0-9 -]/g, '') // Remove invalid chars
+                                            .replace(/\s+/g, '-')       // Replace spaces with -
+                                            .replace(/-+/g, '-');       // Collapse multiple dashes
+                }
+            });
+
+            // --- Load Post Data for Editing ---
+            async function loadPostDataForEdit(id) {
+                try {
+                    const post = await getDocumentById('blogPosts', id);
+                    if (post) {
+                        postTitleInput.value = post.title || '';
+                        postSlugInput.value = post.slug || '';
+                        postExcerptInput.value = post.excerpt || '';
+                        postContentInput.value = post.content || '';
+                        postCategoryInput.value = post.category || '';
+                        postTagsInput.value = (post.tags && Array.isArray(post.tags)) ? post.tags.join(', ') : '';
+                        postAuthorInput.value = post.author || '';
+
+                        // Handle thumbnail preview
+                        if (post.thumbnailURL) {
+                            currentThumbnailURL = post.thumbnailURL;
+                            currentThumbnailPreview.src = post.thumbnailURL;
+                            currentThumbnailPreview.classList.remove('hidden');
+                            currentThumbnailUrlDisplay.textContent = `Current Thumbnail: ${post.thumbnailURL}`;
+                            currentThumbnailUrlDisplay.classList.remove('hidden');
+                        }
+                    } else {
+                        alert('Blog post not found for editing.');
+                        window.location.href = '/blog.html?admin=true'; // Redirect if post not found
+                    }
+                } catch (error) {
+                    console.error("Error loading blog post for edit:", error);
+                    alert('Error loading blog post data. Please try again.');
+                    window.location.href = '/blog.html?admin=true';
+                }
+            }
+
+            // --- Handle Form Submission (Create/Edit Post) ---
+            blogPostForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                formMessage.classList.add('hidden'); // Hide previous messages
+                submitBtn.disabled = true;
+                submitBtn.textContent = isEditMode ? 'Updating...' : 'Creating...';
+
+                const title = postTitleInput.value.trim();
+                const slug = postSlugInput.value.trim();
+                const excerpt = postExcerptInput.value.trim();
+                const content = postContentInput.value.trim();
+                const category = postCategoryInput.value.trim();
+                const tags = postTagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                const author = postAuthorInput.value.trim();
+
+                if (!title || !slug || !content || !author) {
+                    displayMessage('Please fill in all required fields (Title, Slug, Content, Author).', 'bg-red-100 text-red-700');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditMode ? 'Update Post' : 'Create Post';
+                    return;
+                }
+
+                let thumbnailURL = currentThumbnailURL; // Start with existing URL if editing
+
+                // Handle thumbnail upload if a new file is selected
+                const file = postThumbnailInput.files[0];
+                if (file) {
+                    displayMessage('Uploading thumbnail...', 'bg-blue-100 text-blue-700');
+                    try {
+                        // Create a unique file name
+                        const fileName = `${Date.now()}_${file.name}`;
+                        const fileRef = storageRef.child(`blog_thumbnails/${fileName}`);
+                        const snapshot = await fileRef.put(file);
+                        thumbnailURL = await snapshot.ref.getDownloadURL();
+                        console.log('Thumbnail uploaded:', thumbnailURL);
+                        displayMessage('Thumbnail uploaded successfully!', 'bg-green-100 text-green-700');
+                    } catch (error) {
+                        console.error("Error uploading thumbnail:", error);
+                        displayMessage(`Thumbnail upload failed: ${error.message}`, 'bg-red-100 text-red-700');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = isEditMode ? 'Update Post' : 'Create Post';
+                        return;
+                    }
+                }
+
+                const postData = {
+                    title,
+                    slug,
+                    excerpt,
+                    content,
+                    category,
+                    tags,
+                    author,
+                    thumbnailURL, // Use the new URL or existing one
+                    publishedDate: firebase.firestore.FieldValue.serverTimestamp(), // Always update timestamp on create/edit
+                    // You might add a 'status: "draft" | "published"' field if you want draft functionality
+                };
+
+                try {
+                    if (isEditMode) {
+                        await updateDocument('blogPosts', postId, postData);
+                        displayMessage('Blog post updated successfully!', 'bg-green-100 text-green-700');
+                    } else {
+                        // Before adding a new post, check if slug already exists
+                        const existingPosts = await db.collection('blogPosts').where('slug', '==', slug).limit(1).get();
+                        if (!existingPosts.empty) {
+                            displayMessage('Error: A post with this slug already exists. Please choose a different slug.', 'bg-red-100 text-red-700');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Create Post';
+                            return;
+                        }
+
+                        await addDocument('blogPosts', postData);
+                        displayMessage('Blog post created successfully!', 'bg-green-100 text-green-700');
+                        // Clear form for next entry after adding
+                        blogPostForm.reset();
+                        currentThumbnailPreview.classList.add('hidden');
+                        currentThumbnailUrlDisplay.classList.add('hidden');
+                        currentThumbnailURL = '';
+                    }
+                    setTimeout(() => {
+                        window.location.href = '/blog.html?admin=true'; // Redirect back to blog list (admin view)
+                    }, 2000);
+                } catch (error) {
+                    console.error("Error saving blog post:", error);
+                    displayMessage(`Failed to save blog post: ${error.message}`, 'bg-red-100 text-red-700');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditMode ? 'Update Post' : 'Create Post';
+                }
+            });
+
+            function displayMessage(message, className) {
+                formMessage.textContent = message;
+                formMessage.className = `mt-4 p-3 rounded text-center ${className}`;
+                formMessage.classList.remove('hidden');
+            }
+        });
+
+        // Firebase Storage Rules (add these to your Firebase Console under Storage -> Rules)
+        /*
+        rules_version = '2';
+        service firebase.storage {
+          match /b/{bucket}/o {
+            match /blog_thumbnails/{fileName} {
+              allow read: if true; // Publicly readable for display
+              allow write: if request.auth != null; // Only authenticated users can upload
+            }
+          }
+        }
+        */
+    </script>
+</body>
+</html>
