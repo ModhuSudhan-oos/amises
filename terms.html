@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Read the Terms of Service for the SaaS Tools Directory. This outlines the legal agreement between you and our platform regarding website usage.">
+    <meta name="keywords" content="terms of service, terms and conditions, legal agreement, website terms, user agreement">
+    <title>Terms of Service - SaaS Tools Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal">
+
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 text-center z-50 hidden">
+        <p class="text-sm">We use cookies to ensure you get the best experience on our website. By continuing to use our site, you agree to our <a href="/privacy.html" class="underline">Privacy Policy</a>.</p>
+        <button id="acceptCookies" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm">Accept Cookies</button>
+    </div>
+
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">SaaS Directory</a>
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Home</a>
+                <a href="/blog.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Blog</a>
+                <a href="/submit-tool.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Submit Tool</a>
+                <a href="/faq.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">FAQ</a>
+                <a href="/admin.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Admin</a>
+                
+                <label for="darkModeToggle" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="darkModeToggle" class="sr-only">
+                        <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium dark:text-gray-300">Dark Mode</div>
+                </label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-8 text-center">Terms of Service</h1>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-4xl mx-auto prose dark:prose-invert">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Last Updated: July 28, 2025</p>
+
+            <p class="mb-4">
+                Welcome to the **SaaS Tools Directory** ("Service," "we," "us," or "our"). These Terms of Service ("Terms") govern your use of our website located at [Your Website URL Here] (the "Site") and any related services provided by us.
+            </p>
+            <p class="mb-4">
+                By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">1. Acceptance of Terms</h2>
+            <p class="mb-4">
+                By accessing and using our Site, you confirm that you are at least 18 years of age (or the legal age of majority in your jurisdiction) and that you have read, understood, and agree to be bound by these Terms, as well as our <a href="/privacy.html" class="text-blue-600 dark:text-blue-400 underline">Privacy Policy</a>.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">2. Changes to Terms</h2>
+            <p class="mb-4">
+                We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">3. Use of the Service</h2>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>**Eligibility:** You must be at least 18 years old to use this Service.</li>
+                <li>**Permitted Use:** You agree to use the Service only for lawful purposes and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the Service.</li>
+                <li>**Prohibited Activities:** You agree not to engage in any of the following prohibited activities:
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>Copying, distributing, or disclosing any part of the Service in any medium.</li>
+                        <li>Transmitting spam, chain letters, or other unsolicited email.</li>
+                        <li>Attempting to interfere with, compromise the system integrity or security or decipher any transmissions to or from the servers running the Service.</li>
+                        <li>Taking any action that imposes, or may impose, an unreasonable or disproportionately large load on our infrastructure.</li>
+                        <li>Uploading invalid data, viruses, worms, or other software agents through the Service.</li>
+                        <li>Collecting or harvesting any personally identifiable information, including account names, from the Service.</li>
+                        <li>Using the Service for any commercial solicitation purposes.</li>
+                        <li>Impersonating another person or otherwise misrepresenting your affiliation with a person or entity.</li>
+                        <li>Bypassing the measures we may use to prevent or restrict access to the Service.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">4. Intellectual Property</h2>
+            <p class="mb-4">
+                The Service and its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of SaaS Tools Directory and its licensors. The Service is protected by copyright, trademark, and other laws of both the [Your Country] and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of SaaS Tools Directory.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">5. Third-Party Links and Affiliate Disclosure</h2>
+            <p class="mb-4">
+                Our Service may contain links to third-party websites or services that are not owned or controlled by SaaS Tools Directory. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services. You further acknowledge and agree that SaaS Tools Directory shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such websites or services.
+            </p>
+            <p class="mb-4">
+                **Affiliate Disclosure:** Please note that some of the links on our Site are affiliate links, and at no additional cost to you, we will earn a commission if you decide to make a purchase after clicking through the link. We only recommend products and services that we genuinely believe will add value to our users.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">6. Disclaimer of Warranties</h2>
+            <p class="mb-4">
+                Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The Service is provided without warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, non-infringement or course of performance.
+            </p>
+            <p class="mb-4">
+                SaaS Tools Directory, its subsidiaries, affiliates, and its licensors do not warrant that a) the Service will function uninterrupted, secure or available at any particular time or location; b) any errors or defects will be corrected; c) the Service is free of viruses or other harmful components; or d) the results of using the Service will meet your requirements.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">7. Limitation of Liability</h2>
+            <p class="mb-4">
+                In no event shall SaaS Tools Directory, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">8. Governing Law</h2>
+            <p class="mb-4">
+                These Terms shall be governed and construed in accordance with the laws of [Your Country], without regard to its conflict of law provisions.
+            </p>
+            <p class="mb-4">
+                Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">9. Contact Us</h2>
+            <p class="mb-4">
+                If you have any questions about these Terms, please contact us:
+            </p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>By email: [Your Contact Email Here]</li>
+                <li>By visiting this page on our website: <a href="/contact.html" class="text-blue-600 dark:text-blue-400 underline">/contact.html</a> (if you create one)</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-wrap justify-center gap-8 mb-6">
+                <a href="/about.html" class="hover:text-blue-400">About Us</a>
+                <a href="/privacy.html" class="hover:text-blue-400">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-blue-400">Terms of Service</a>
+                <a href="/contact.html" class="hover:text-blue-400">Contact</a>
+                <a href="https://github.com/your-username/your-repo-name" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+            <p>&copy; 2024 SaaS Tools Directory. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic SEO metadata for the terms of service page
+            setSeoMetaData('terms', "Terms of Service - SaaS Tools Directory", "Read the legal terms and conditions for using the SaaS Tools Directory website and services.", "terms of service, legal terms, website agreement, user conduct");
+            // No Firebase data fetching needed for this static content page
+        });
+    </script>
+</body>
+</html>
