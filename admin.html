@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin panel for managing the SaaS Tools Directory.">
+    <meta name="keywords" content="admin dashboard, SaaS management, Firebase admin, content management">
+    <title>Admin Dashboard - SaaS Tools Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal flex">
+
+    <aside class="w-64 bg-gray-900 text-white p-6 min-h-screen shadow-lg">
+        <h2 class="text-3xl font-bold mb-8 text-center">Admin Panel</h2>
+        <nav>
+            <ul>
+                <li class="mb-4">
+                    <a href="/admin.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/add-tool.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-plus-circle mr-3"></i> Add/Edit Tool
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-categories" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-tags mr-3"></i> Manage Categories
+                    </a>
+                </li>
+                 <li class="mb-4">
+                    <a href="/blog.html?admin=true" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-blog mr-3"></i> Blog Posts
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/analytics.html" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-chart-bar mr-3"></i> Analytics
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/team.html" id="teamManagementLink" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200 hidden">
+                        <i class="fas fa-users mr-3"></i> Team Members
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-seo" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-globe mr-3"></i> Manage SEO
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-testimonials" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-quote-right mr-3"></i> Testimonials
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin.html#manage-faqs" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-question-circle mr-3"></i> FAQs
+                    </a>
+                </li>
+                <li class="mt-8">
+                    <button id="adminLogoutBtn" class="flex items-center w-full text-red-400 hover:text-white hover:bg-red-700 p-3 rounded-md transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 p-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white mb-8">Admin Dashboard</h1>
+
+        <section id="dashboard-overview" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-gray-600 dark:text-gray-300 text-lg">Total Tools</p>
+                        <i class="fas fa-cubes text-blue-500 text-2xl"></i>
+                    </div>
+                    <p id="totalToolsCount" class="text-4xl font-bold text-gray-900 dark:text-white">0</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-gray-600 dark:text-gray-300 text-lg">Total Clicks</p>
+                        <i class="fas fa-mouse-pointer text-green-500 text-2xl"></i>
+                    </div>
+                    <p id="totalClicksCount" class="text-4xl font-bold text-gray-900 dark:text-white">0</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-gray-600 dark:text-gray-300 text-lg">New Blog Posts</p>
+                        <i class="fas fa-newspaper text-purple-500 text-2xl"></i>
+                    </div>
+                    <p id="newBlogPostsCount" class="text-4xl font-bold text-gray-900 dark:text-white">0</p>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-6">
+                <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Top 5 Tools by Clicks</h3>
+                <ul id="topToolsList" class="divide-y divide-gray-200 dark:divide-gray-700">
+                    </ul>
+            </div>
+        </section>
+
+        <hr class="my-12 border-gray-200 dark:border-gray-700">
+
+        <section id="manage-categories" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manage Categories</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <form id="addCategoryForm" class="mb-6 flex space-x-4">
+                    <input type="text" id="categoryName" placeholder="New Category Name" class="flex-grow shadow appearance-none border rounded py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="text" id="categoryIcon" placeholder="Icon URL (e.g., /assets/icons/new.svg)" class="flex-grow shadow appearance-none border rounded py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Category</button>
+                </form>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Icon</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-12 border-gray-200 dark:border-gray-700">
+
+        <section id="manage-testimonials" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manage Testimonials</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Company</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Message</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Approved</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testimonialsTableBody" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-12 border-gray-200 dark:border-gray-700">
+
+        <section id="manage-faqs" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manage FAQs</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <form id="addFaqForm" class="mb-6 space-y-4">
+                    <input type="text" id="faqQuestion" placeholder="FAQ Question" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <textarea id="faqAnswer" placeholder="FAQ Answer" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add FAQ</button>
+                </form>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Question</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Answer</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faqsTableBody" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-12 border-gray-200 dark:border-gray-700">
+
+        <section id="manage-seo" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manage SEO Metadata</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <p class="text-gray-600 dark:text-gray-300 mb-4">Edit SEO Title, Description, and Keywords for specific pages.</p>
+                <form id="seoForm" class="space-y-4">
+                    <div class="mb-4">
+                        <label for="seoPage" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Page Identifier</label>
+                        <select id="seoPage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="index">Home Page (index)</option>
+                            <option value="blog">Blog Page</option>
+                            <option value="faq">FAQ Page</option>
+                            <option value="about">About Page</option>
+                            <option value="privacy">Privacy Policy Page</option>
+                            <option value="terms">Terms & Conditions Page</option>
+                            </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="seoTitle" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">SEO Title</label>
+                        <input type="text" id="seoTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Meta Title (e.g., Best SaaS Tools Online)">
+                    </div>
+                    <div class="mb-4">
+                        <label for="seoDescription" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Meta Description</label>
+                        <textarea id="seoDescription" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Brief description for search engines"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="seoKeywords" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Meta Keywords (comma-separated)</label>
+                        <input type="text" id="seoKeywords" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="keywords, separated, by, commas">
+                    </div>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save SEO Data</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script> <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // First, ensure the user is authenticated and authorized to be on this page
+            await checkAuthAndRedirect(['superAdmin', 'editor'], '/login.html');
+            // If checkAuthAndRedirect doesn't redirect, it means the user is authorized.
+
+            // Set dynamic SEO metadata for the admin page
+            setSeoMetaData('admin', "Admin Dashboard - SaaS Tools Directory", "Manage content and settings for the SaaS Tools Directory.", "admin, dashboard, content management");
+
+            const totalToolsCount = document.getElementById('totalToolsCount');
+            const totalClicksCount = document.getElementById('totalClicksCount');
+            const newBlogPostsCount = document.getElementById('newBlogPostsCount');
+            const topToolsList = document.getElementById('topToolsList');
+
+            const teamManagementLink = document.getElementById('teamManagementLink');
+
+            const addCategoryForm = document.getElementById('addCategoryForm');
+            const categoryNameInput = document.getElementById('categoryName');
+            const categoryIconInput = document.getElementById('categoryIcon');
+            const categoriesTableBody = document.getElementById('categoriesTableBody');
+
+            const testimonialsTableBody = document.getElementById('testimonialsTableBody');
+
+            const addFaqForm = document.getElementById('addFaqForm');
+            const faqQuestionInput = document.getElementById('faqQuestion');
+            const faqAnswerInput = document.getElementById('faqAnswer');
+            const faqsTableBody = document.getElementById('faqsTableBody');
+
+            const seoForm = document.getElementById('seoForm');
+            const seoPageSelect = document.getElementById('seoPage');
+            const seoTitleInput = document.getElementById('seoTitle');
+            const seoDescriptionInput = document.getElementById('seoDescription');
+            const seoKeywordsInput = document.getElementById('seoKeywords');
+
+            // --- Dashboard Overview Data Loading ---
+            async function loadDashboardData() {
+                try {
+                    // Total Tools
+                    const tools = await getAllDocuments('tools');
+                    totalToolsCount.textContent = tools.length;
+
+                    // Total Clicks (sum from affiliateClicks)
+                    const clicks = await getAllDocuments('affiliateClicks');
+                    totalClicksCount.textContent = clicks.length; // Simple count of click events
+
+                    // New Blog Posts (e.g., unpublished or within a time frame)
+                    // For now, let's count all blog posts. Refine later for 'new'.
+                    const blogPosts = await getAllDocuments('blogPosts');
+                    newBlogPostsCount.textContent = blogPosts.length;
+
+                    // Top 5 Tools by Clicks
+                    tools.sort((a, b) => (b.clicks || 0) - (a.clicks || 0)); // Sort descending by clicks
+                    topToolsList.innerHTML = '';
+                    const top5Tools = tools.slice(0, 5);
+                    if (top5Tools.length === 0) {
+                        topToolsList.innerHTML = '<li class="p-4 text-gray-500 dark:text-gray-400">No tools available to display.</li>';
+                    } else {
+                        top5Tools.forEach(tool => {
+                            const li = document.createElement('li');
+                            li.className = 'flex items-center justify-between py-3 px-2 hover:bg-gray-50 dark:hover:bg-gray-700';
+                            li.innerHTML = `
+                                <a href="/tool.html?id=${tool.id}" class="flex items-center text-gray-700 dark:text-gray-200">
+                                    <img src="${tool.logoURL}" alt="${tool.name} logo" class="w-8 h-8 rounded-full mr-3 object-contain">
+                                    <span class="font-medium">${tool.name}</span>
+                                </a>
+                                <span class="text-gray-600 dark:text-gray-300">${tool.clicks || 0} clicks</span>
+                            `;
+                            topToolsList.appendChild(li);
+                        });
+                    }
+
+                } catch (error) {
+                    console.error("Error loading dashboard data:", error);
+                    // Display error messages on the dashboard if necessary
+                }
+            }
+
+            // --- Manage Categories Functions ---
+            async function loadCategories() {
+                categoriesTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">Loading categories...</td></tr>';
+                try {
+                    const categories = await getAllDocuments('categories');
+                    categoriesTableBody.innerHTML = ''; // Clear loading message
+
+                    if (categories.length === 0) {
+                        categoriesTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">No categories found.</td></tr>';
+                        return;
+                    }
+
+                    categories.forEach(category => {
+                        const row = categoriesTableBody.insertRow();
+                        row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${category.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                ${category.icon ? `<img src="${category.icon}" alt="Icon" class="w-6 h-6 inline-block">` : 'N/A'}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button data-id="${category.id}" data-name="${category.name}" data-icon="${category.icon || ''}" class="edit-category-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-4">Edit</button>
+                                <button data-id="${category.id}" class="delete-category-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                            </td>
+                        `;
+                    });
+
+                    // Add event listeners for edit/delete buttons
+                    categoriesTableBody.querySelectorAll('.edit-category-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            const name = e.target.dataset.name;
+                            const icon = e.target.dataset.icon;
+                            const newName = prompt(`Edit category name for "${name}":`, name);
+                            const newIcon = prompt(`Edit category icon URL for "${name}":`, icon);
+                            if (newName !== null && newName.trim() !== '') {
+                                updateDocument('categories', id, { name: newName.trim(), icon: newIcon.trim() || '' });
+                                loadCategories(); // Reload table
+                            }
+                        });
+                    });
+                    categoriesTableBody.querySelectorAll('.delete-category-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const id = e.target.dataset.id;
+                            if (confirm('Are you sure you want to delete this category?')) {
+                                await deleteDocument('categories', id);
+                                loadCategories(); // Reload table
+                            }
+                        });
+                    });
+
+                } catch (error) {
+                    console.error("Error loading categories:", error);
+                    categoriesTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">Failed to load categories.</td></tr>';
+                }
+            }
+
+            addCategoryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = categoryNameInput.value.trim();
+                const icon = categoryIconInput.value.trim();
+                if (name) {
+                    // Create a slug-like ID for the category if you want more control, otherwise Firestore auto-generates
+                    // For simplicity, let's let Firestore generate the ID for now.
+                    await addDocument('categories', { name: name, icon: icon, id: name.toLowerCase().replace(/\s+/g, '-') });
+                    categoryNameInput.value = '';
+                    categoryIconInput.value = '';
+                    loadCategories();
+                }
+            });
+
+
+            // --- Manage Testimonials Functions ---
+            async function loadTestimonials() {
+                testimonialsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">Loading testimonials...</td></tr>';
+                try {
+                    const testimonials = await getAllDocuments('testimonials');
+                    testimonialsTableBody.innerHTML = ''; // Clear loading message
+
+                    if (testimonials.length === 0) {
+                        testimonialsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No testimonials found.</td></tr>';
+                        return;
+                    }
+
+                    testimonials.forEach(testimonial => {
+                        const row = testimonialsTableBody.insertRow();
+                        row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${testimonial.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">${testimonial.company || 'N/A'}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300 max-w-xs overflow-hidden text-ellipsis">${testimonial.message}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="${testimonial.approved ? 'text-green-600' : 'text-red-600'}">
+                                    <i class="fas ${testimonial.approved ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button data-id="${testimonial.id}" data-approved="${testimonial.approved}" class="toggle-approval-btn text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4">
+                                    ${testimonial.approved ? 'Unapprove' : 'Approve'}
+                                </button>
+                                <button data-id="${testimonial.id}" class="delete-testimonial-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                            </td>
+                        `;
+                    });
+
+                    testimonialsTableBody.querySelectorAll('.toggle-approval-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const id = e.target.dataset.id;
+                            const currentApproval = e.target.dataset.approved === 'true';
+                            await updateDocument('testimonials', id, { approved: !currentApproval });
+                            loadTestimonials(); // Reload table
+                        });
+                    });
+                    testimonialsTableBody.querySelectorAll('.delete-testimonial-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const id = e.target.dataset.id;
+                            if (confirm('Are you sure you want to delete this testimonial?')) {
+                                await deleteDocument('testimonials', id);
+                                loadTestimonials(); // Reload table
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error("Error loading testimonials:", error);
+                    testimonialsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-red-500">Failed to load testimonials.</td></tr>';
+                }
+            }
+
+
+            // --- Manage FAQs Functions ---
+            async function loadFaqs() {
+                faqsTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">Loading FAQs...</td></tr>';
+                try {
+                    const faqs = await getAllDocuments('faqs');
+                    faqsTableBody.innerHTML = '';
+
+                    if (faqs.length === 0) {
+                        faqsTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">No FAQs found.</td></tr>';
+                        return;
+                    }
+
+                    faqs.forEach(faq => {
+                        const row = faqsTableBody.insertRow();
+                        row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${faq.question}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300 max-w-lg overflow-hidden text-ellipsis">${faq.answer}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button data-id="${faq.id}" data-question="${faq.question}" data-answer="${faq.answer}" class="edit-faq-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-4">Edit</button>
+                                <button data-id="${faq.id}" class="delete-faq-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                            </td>
+                        `;
+                    });
+
+                    faqsTableBody.querySelectorAll('.edit-faq-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const id = e.target.dataset.id;
+                            const currentQuestion = e.target.dataset.question;
+                            const currentAnswer = e.target.dataset.answer;
+                            const newQuestion = prompt('Edit question:', currentQuestion);
+                            const newAnswer = prompt('Edit answer:', currentAnswer);
+                            if (newQuestion !== null && newQuestion.trim() !== '' && newAnswer !== null && newAnswer.trim() !== '') {
+                                await updateDocument('faqs', id, { question: newQuestion.trim(), answer: newAnswer.trim() });
+                                loadFaqs();
+                            }
+                        });
+                    });
+                    faqsTableBody.querySelectorAll('.delete-faq-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const id = e.target.dataset.id;
+                            if (confirm('Are you sure you want to delete this FAQ?')) {
+                                await deleteDocument('faqs', id);
+                                loadFaqs();
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error("Error loading FAQs:", error);
+                    faqsTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">Failed to load FAQs.</td></tr>';
+                }
+            }
+
+            addFaqForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const question = faqQuestionInput.value.trim();
+                const answer = faqAnswerInput.value.trim();
+                if (question && answer) {
+                    await addDocument('faqs', { question, answer });
+                    faqQuestionInput.value = '';
+                    faqAnswerInput.value = '';
+                    loadFaqs();
+                }
+            });
+
+
+            // --- Manage SEO Functions ---
+            async function loadSeoDataForPage(pageIdentifier) {
+                try {
+                    const seoDoc = await getDocumentById('seoMeta', pageIdentifier);
+                    if (seoDoc) {
+                        seoTitleInput.value = seoDoc.title || '';
+                        seoDescriptionInput.value = seoDoc.description || '';
+                        seoKeywordsInput.value = seoDoc.keywords || '';
+                    } else {
+                        // Clear fields if no data for this page
+                        seoTitleInput.value = '';
+                        seoDescriptionInput.value = '';
+                        seoKeywordsInput.value = '';
+                    }
+                } catch (error) {
+                    console.error("Error loading SEO data:", error);
+                    alert("Error loading SEO data. Check console for details.");
+                }
+            }
+
+            seoPageSelect.addEventListener('change', (e) => {
+                loadSeoDataForPage(e.target.value);
+            });
+
+            seoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const page = seoPageSelect.value;
+                const title = seoTitleInput.value.trim();
+                const description = seoDescriptionInput.value.trim();
+                const keywords = seoKeywordsInput.value.trim();
+
+                const seoData = { title, description, keywords };
+
+                try {
+                    // Firestore `set` with `merge: true` will create or update the document by its ID (page name)
+                    await db.collection('seoMeta').doc(page).set(seoData, { merge: true });
+                    alert('SEO data saved successfully!');
+                } catch (error) {
+                    console.error("Error saving SEO data:", error);
+                    alert('Failed to save SEO data. Please try again.');
+                }
+            });
+
+
+            // --- Initial Loads on Page Load ---
+            loadDashboardData();
+            loadCategories();
+            loadTestimonials();
+            loadFaqs();
+            loadSeoDataForPage(seoPageSelect.value); // Load SEO data for the initially selected page
+
+            // Check and set visibility for Team Management link based on Super Admin role
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    const adminDoc = await db.collection('adminUsers').doc(user.uid).get();
+                    if (adminDoc.exists && adminDoc.data().isSuperAdmin) {
+                        teamManagementLink.classList.remove('hidden');
+                    } else {
+                        teamManagementLink.classList.add('hidden');
+                    }
+                }
+            });
+
+            // This admin-script.js is loaded last to ensure all elements are ready.
+            // It mostly contains common logout logic now, but can be expanded for other global admin utilities.
+        });
+    </script>
+</body>
+</html>
