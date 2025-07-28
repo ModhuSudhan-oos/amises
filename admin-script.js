@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
     // Listen for authentication state changes specifically for admin pages
-    // This will update the currentUserRole in auth.js
     listenForAuthChanges(async (user) => {
         if (!user) {
             // If user logs out or is not authenticated, redirect to login page
@@ -14,18 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // User is logged in. Now ensure their admin role is properly set in Firestore
-            // This handles cases where a user might log in for the first time
-            // or if their adminUsers document was created without a userId field initially.
             try {
                 const userDocRef = db.collection('adminUsers').doc(user.uid);
                 const userDoc = await userDocRef.get();
 
                 if (!userDoc.exists) {
                     // User exists in Firebase Auth but not in our adminUsers collection
-                    // This scenario should ideally be prevented or handled with a Cloud Function
-                    // For now, if they somehow get here, deny access.
-                    console.warn(`Authenticated user ${user.email} (UID: ${user.uid}) not found in adminUsers collection.`);
-                    // Optionally force logout if no admin role is found.
+                    // This is a security concern; force logout.
+                    console.warn(`Authenticated user ${user.email} (UID: ${user.uid}) not found in adminUsers collection. Forcing logout.`);
                     await signOutUser();
                     if (window.location.pathname !== '/login.html') {
                         window.location.href = '/login.html';
@@ -43,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Dynamically show/hide "Team Members" link based on role
-                const teamManagementLink = document.getElementById('teamManagementLink');
+                // This part ensures that the sidebar link visibility is correctly managed.
+                const teamManagementLink = document.getElementById('teamManagementLink'); // Make sure this ID is in your admin sidebar
                 if (teamManagementLink) {
                     const role = getCurrentUserRole();
                     if (role === 'superAdmin') {
