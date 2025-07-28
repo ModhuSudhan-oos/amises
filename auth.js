@@ -76,44 +76,39 @@ function listenForAuthChanges(callback = () => {}) {
  */
 async function checkAuthAndRedirect(requiredRoles, redirectUrl) {
     return new Promise((resolve) => {
+        // Use a persistent listener to ensure role is always checked,
+        // and unsubscribe it once the initial check is complete.
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            unsubscribe(); // Unsubscribe immediately after the first check
-
-            if (!user) {
-                // Not authenticated
-                window.location.href = redirectUrl;
-                resolve(false);
-                return;
-            }
-
-            // User is authenticated, now check role
-            let userRole = null;
-            try {
-                const userDoc = await db.collection('adminUsers').doc(user.uid).get();
-                if (userDoc.exists) {
-                    userRole = userDoc.data().role;
-                    currentUserRole = userRole; // Update global role
-                } else {
-                    // If user is authenticated but not in adminUsers, treat as no admin role
-                    console.warn(`Authenticated user ${user.email} not found in adminUsers collection.`);
-                    window.location.href = redirectUrl;
-                    resolve(false);
-                    return;
+            // Ensure currentUserRole is properly set from `listenForAuthChanges`
+            // if this function is called after the main listener has fired.
+            // If not, we might need a brief delay or force fetch it here.
+            if (user && currentUserRole === null) {
+                try {
+                    const userDoc = await db.collection('adminUsers').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUserRole = userDoc.data().role;
+                    } else {
+                        // User is authenticated but not an admin, or admin role not set.
+                        currentUserRole = null;
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role for checkAuthAndRedirect:", error);
+                    currentUserRole = null;
                 }
-            } catch (error) {
-                console.error("Error fetching user role for redirection:", error);
-                window.location.href = redirectUrl;
+            }
+            
+            if (!user || !currentUserRole || !requiredRoles.includes(currentUserRole)) {
+                // Not authenticated, or insufficient role
+                unsubscribe(); // Stop listening
+                if (window.location.pathname !== redirectUrl) { // Prevent infinite redirect
+                    alert('You do not have permission to access this page.');
+                    window.location.href = redirectUrl;
+                }
                 resolve(false);
                 return;
-            }
-
-            if (!userRole || !requiredRoles.includes(userRole)) {
-                // Insufficient role
-                alert('You do not have permission to access this page.');
-                window.location.href = redirectUrl;
-                resolve(false);
             } else {
                 // Authorized
+                unsubscribe(); // Stop listening
                 resolve(true);
             }
         });
