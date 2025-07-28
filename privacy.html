@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Read the Privacy Policy of the SaaS Tools Directory to understand how your data is collected, used, and protected on our platform.">
+    <meta name="keywords" content="privacy policy, data protection, data privacy, user data, GDPR, CCPA, website privacy">
+    <title>Privacy Policy - SaaS Tools Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans leading-normal tracking-normal">
+
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 text-center z-50 hidden">
+        <p class="text-sm">We use cookies to ensure you get the best experience on our website. By continuing to use our site, you agree to our <a href="/privacy.html" class="underline">Privacy Policy</a>.</p>
+        <button id="acceptCookies" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm">Accept Cookies</button>
+    </div>
+
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">SaaS Directory</a>
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Home</a>
+                <a href="/blog.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Blog</a>
+                <a href="/submit-tool.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Submit Tool</a>
+                <a href="/faq.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">FAQ</a>
+                <a href="/admin.html" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">Admin</a>
+                
+                <label for="darkModeToggle" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="darkModeToggle" class="sr-only">
+                        <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium dark:text-gray-300">Dark Mode</div>
+                </label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-8 text-center">Privacy Policy</h1>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-4xl mx-auto prose dark:prose-invert">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Last Updated: July 28, 2025</p>
+
+            <p class="mb-4">
+                This Privacy Policy describes how the **SaaS Tools Directory** ("we," "us," or "our") collects, uses, and discloses your personal information when you visit, use, or make a purchase from our website at [Your Website URL Here] (the "Site").
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">1. Information We Collect</h2>
+            <p class="mb-2">We collect information about you from various sources, including:</p>
+            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2 mt-4">Information You Provide Directly:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>**Contact Information:** When you submit a tool, sign up for our newsletter, or contact us, we may collect your name, email address, company name, and website.</li>
+                <li>**Account Information:** If you create an admin account, we collect your username, password, and email address.</li>
+                <li>**User-Generated Content:** Any information you provide in reviews, comments, or other submissions on the Site.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2 mt-4">Information Collected Automatically:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>**Usage Data:** We collect information about your interactions with our Site, such as the pages you visit, the tools you view, your search queries, and the time and date of your visits.</li>
+                <li>**Device Information:** We may collect information about the device you use to access the Site, including IP address, browser type, operating system, and unique device identifiers.</li>
+                <li>**Cookies and Tracking Technologies:** We use cookies and similar tracking technologies (like web beacons and pixels) to track activity on our Site and hold certain information. This helps us understand your preferences, improve our services, and deliver targeted advertising.</li>
+                <li>**Referral Data:** Information about the website or search term that referred you to our Site.</li>
+                <li>**Clicks on Affiliate Links:** We track clicks on affiliate links to third-party SaaS tools to earn commissions, but we do not collect personal information directly from these third-party sites unless you provide it to them.</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">2. How We Use Your Information</h2>
+            <p class="mb-2">We use the information we collect for various purposes, including:</p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>To provide, operate, and maintain our Site.</li>
+                <li>To improve, personalize, and expand our Site and services.</li>
+                <li>To understand and analyze how you use our Site.</li>
+                <li>To develop new products, services, features, and functionality.</li>
+                <li>To communicate with you, directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the Site, and for marketing and promotional purposes.</li>
+                <li>To send you emails (e.g., newsletters, notifications if you opt-in).</li>
+                <li>To find and prevent fraud.</li>
+                <li>To enforce our Terms of Service.</li>
+                <li>For compliance with legal obligations.</li>
+                <li>To track the performance of our affiliate partnerships.</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">3. Sharing Your Information</h2>
+            <p class="mb-2">We may share your personal information in the following situations:</p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>**With Service Providers:** We may share your information with third-party service providers who perform services on our behalf, such as hosting, analytics, payment processing, and customer support.</li>
+                <li>**For Business Transfers:** If we are involved in a merger, acquisition, or sale of assets, your personal information may be transferred as part of that transaction.</li>
+                <li>**With Affiliates:** We may share information with our affiliates, who are required to honor this Privacy Policy.</li>
+                <li>**For Legal Compliance:** We may disclose your information if required to do so by law or in response to valid requests by public authorities (e.g., a court order or government agency request).</li>
+                <li>**With Your Consent:** We may share your information with your explicit consent.</li>
+                <li>**Aggregated or Anonymized Data:** We may share aggregated or anonymized data that cannot reasonably be used to identify you.</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">4. Cookies and Tracking Technologies</h2>
+            <p class="mb-4">
+                We use cookies and similar tracking technologies to track the activity on our Site and store certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Site.
+            </p>
+            <p class="mb-4">
+                For more details on how we use cookies, please refer to our <a href="/terms.html" class="text-blue-600 dark:text-blue-400 underline">Terms of Service</a> or contact us directly.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">5. Your Data Protection Rights (GDPR & CCPA)</h2>
+            <p class="mb-4">
+                Depending on your location, you may have the following data protection rights:
+            </p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>**The right to access:** You have the right to request copies of your personal data.</li>
+                <li>**The right to rectification:** You have the right to request that we correct any information you believe is inaccurate or complete information you believe is incomplete.</li>
+                <li>**The right to erasure:** You have the right to request that we erase your personal data, under certain conditions.</li>
+                <li>**The right to restrict processing:** You have the right to request that we restrict the processing of your personal data, under certain conditions.</li>
+                <li>**The right to object to processing:** You have the right to object to our processing of your personal data, under certain conditions.</li>
+                <li>**The right to data portability:** You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.</li>
+            </ul>
+            <p class="mb-4">
+                If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us at [Your Contact Email Here].
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">6. Security of Your Information</h2>
+            <p class="mb-4">
+                The security of your personal information is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">7. Links to Other Websites</h2>
+            <p class="mb-4">
+                Our Site may contain links to other websites that are not operated by us. If you click on a third-party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">8. Children's Privacy</h2>
+            <p class="mb-4">
+                Our Site is not intended for children under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us. If we become aware that we have collected personal data from a child without verification of parental consent, we take steps to remove that information from our servers.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">9. Changes to This Privacy Policy</h2>
+            <p class="mb-4">
+                We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">10. Contact Us</h2>
+            <p class="mb-4">
+                If you have any questions about this Privacy Policy, you can contact us:
+            </p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>By email: [Your Contact Email Here]</li>
+                <li>By visiting this page on our website: <a href="/contact.html" class="text-blue-600 dark:text-blue-400 underline">/contact.html</a> (if you create one)</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-wrap justify-center gap-8 mb-6">
+                <a href="/about.html" class="hover:text-blue-400">About Us</a>
+                <a href="/privacy.html" class="hover:text-blue-400">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-blue-400">Terms of Service</a>
+                <a href="/contact.html" class="hover:text-blue-400">Contact</a>
+                <a href="https://github.com/your-username/your-repo-name" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+            <p>&copy; 2024 SaaS Tools Directory. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="firestore.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="seo-meta.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic SEO metadata for the privacy policy page
+            setSeoMetaData('privacy', "Privacy Policy - SaaS Tools Directory", "Understand how your personal data is collected, used, and protected by the SaaS Tools Directory.", "privacy policy, data privacy, user rights, GDPR, CCPA");
+            // No Firebase data fetching needed for this static content page
+        });
+    </script>
+</body>
+</html>
