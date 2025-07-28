@@ -1,0 +1,11 @@
+# netlify.toml
+
+[[redirects]]
+from = "/tool/*"
+to = "/tool.html"
+status = 200
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
