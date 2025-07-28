@@ -2,17 +2,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Auth state listener for global access to user/role (even on public pages)
-    // This allows you to potentially show/hide elements based on user login status
     listenForAuthChanges((user) => {
-        // Optional: Perform actions when auth state changes on public pages
-        // console.log("Auth state changed on public page:", user ? user.email : "Logged out");
-        // Example: Hide/show admin link
-        const adminLink = document.getElementById('adminLink'); // Add an ID to your admin link in header
+        const adminLink = document.getElementById('adminLink');
         if (adminLink) {
-            // You might want to get the user's role and only show for admins
-            // For now, if user exists, show admin link.
-            // A more robust check should be done on admin pages themselves (via checkAuthAndRedirect)
-            adminLink.style.display = user ? 'block' : 'none';
+            // Check if user exists AND if they have an admin role
+            // getCurrentUserRole() relies on the auth.js listener having fetched the role
+            const role = getCurrentUserRole();
+            if (user && (role === 'editor' || role === 'superAdmin')) {
+                adminLink.style.display = 'block'; // Or 'flex' based on your CSS
+            } else {
+                adminLink.style.display = 'none';
+            }
         }
     });
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
             }
-            // Trigger a resize event to allow Chart.js to re-render with new colors
+            // Trigger a resize event to allow Chart.js to re-render with new colors (if on admin analytics page)
             window.dispatchEvent(new Event('resize'));
         });
     }
